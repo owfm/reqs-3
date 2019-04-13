@@ -1,0 +1,9 @@
+{
+	"dependencies": {
+		"concurrently": "^4.1.0",
+		"nodemon": "^1.18.11"
+	},
+	"scripts": {
+		"start": "concurrently \"cd client && npm run start\" \"cd backend && npm run start \" "
+	}
+}
