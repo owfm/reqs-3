@@ -1,10 +1,11 @@
 var express = require("express");
-var db = require("../db");
 var router = express.Router();
 
 /* GET home page. */
-router.get("/", function(req, res, next) {
-	res.render("index", { title: "Express" });
+router.get("/test", function(req, res, next) {
+  console.log("hit index route.");
+  res.set("Content-Type", "text/html");
+  res.send("Test from route");
 });
 
 module.exports = router;

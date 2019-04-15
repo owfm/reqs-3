@@ -1,18 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { defaultReq, defaultPostParams } from "../lib/defaults.js";
+import { deleteReq } from "../lib/dataFetchHelpers";
 import { Link } from "react-router-dom";
+import _ from "lodash";
 
 const Reqs = () => {
-  const [data, setData] = useState({ reqs: [] });
+  const [reqs, setReqs] = useState([]);
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState(defaultReq);
 
   useEffect(() => {
-    fetch("/reqs")
-      .then(response => response.json())
-      .then(data => {
-        setData({ reqs: data.data });
-      });
+    async function fetchData() {
+      try {
+        const response = await fetch("/reqs");
+
+        if (response.ok) {
+          const data = await response.json();
+          setReqs(data.data);
+        } else {
+          throw new Error(response.statusText);
+        }
+      } catch (error) {
+        setMessage("Something went wrong: " + error.message);
+      }
+    }
+    fetchData();
   }, []);
 
   const handleChange = e => {
@@ -30,16 +42,31 @@ const Reqs = () => {
     postReq(formData);
   };
 
-  const postReq = formData => {
-    fetch("/reqs", {
-      ...defaultPostParams,
-      body: JSON.stringify(formData) // body data type must match "Content-Type" header
-    })
-      .then(response => response.json())
-      .then(responsedata => {
-        setData({ reqs: [...data.reqs, responsedata.data] });
+  const postReq = async formData => {
+    try {
+      const response = await fetch("/reqs", {
+        ...defaultPostParams,
+        body: JSON.stringify(formData) // body data type must match "Content-Type" header
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setReqs([...reqs, data.data]);
         setMessage(data.message);
-      }); // parses JSON response into native Javascript objects
+      } else {
+        throw new Error(response.statusText);
+      }
+    } catch (error) {
+      setMessage(error.message); // parses JSON response into native Javascript objects
+    }
+  };
+
+  const handleDelete = async id => {
+    try {
+      const data = await deleteReq(id);
+      setReqs(_.remove(reqs, i => i._id !== id));
+    } catch (error) {
+      setMessage(`Something went wrong: ${error.message}`);
+    }
   };
 
   return (
@@ -63,6 +90,19 @@ const Reqs = () => {
           value={formData.notes}
           placeholder="Notes"
         />
+        <input
+          name="period"
+          onChange={handleChange}
+          value={formData.period}
+          placeholder="Period"
+        />
+
+        <input
+          name="day"
+          onChange={handleChange}
+          value={formData.day}
+          placeholder="Day"
+        />
         <button onClick={handleSubmit} type="submit">
           Submit
         </button>
@@ -71,9 +111,12 @@ const Reqs = () => {
         <header className="Reqs-header">
           <ul>
             {/* {console.log(data)} */}
-            {data.reqs.map(req => (
+            {reqs.map(req => (
               <li key={req._id}>
-                <Link to={`reqs/${req._id}`}>{req.title}</Link>
+                <Link to={`reqs/${req._id}`}>
+                  {req.title} {req.draft ? "(Draft)" : ""}
+                </Link>
+                <button onClick={() => handleDelete(req._id)}>Delete</button>
               </li>
             ))}
           </ul>

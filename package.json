@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "concurrently": "^4.1.0"
+    "concurrently": "^4.1.0",
+    "lodash": "^4.17.11"
   },
   "scripts": {
     "start": "concurrently \"cd client && npm run start\" \"cd backend && npm run start \" "
