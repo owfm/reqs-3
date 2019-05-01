@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { defaultPostParams } from "../lib/defaults";
-import {
-  debouncedPostPatch,
-  deleteReq,
-  postPatch
-} from "../lib/dataFetchHelpers";
+import { debouncedPostPatch, postPatch } from "../lib/dataFetchHelpers";
+import { connect } from "react-redux";
+import emitSnackbar from "actions/snackbar";
+import { deleteReq } from "../actions/req";
 
-const NewReq = () => {
+const NewReq = ({ dispatch }) => {
   const [requisition, setRequisition] = useState({});
   const [message, setMessage] = useState("Creating new requisition...");
   const [redirect, setRedirect] = useState(false);
@@ -24,7 +23,7 @@ const NewReq = () => {
       })
       .then(data => {
         setRequisition(data.data);
-        setMessage(`New req created with id ${data.data._id}`);
+        dispatch(emitSnackbar(`New req created with id ${data.data._id}`));
       })
       .catch(error => {
         setMessage("Something went wrong! " + error.message);
@@ -40,14 +39,14 @@ const NewReq = () => {
     } catch (error) {}
   };
 
-  const discardDraft = async function() {
-    try {
-      deleteReq(requisition._id);
-      setRedirect(true);
-    } catch (error) {
-      setMessage("Something went wrong! " + error.message);
-    }
-  };
+  // const discardDraft = async function() {
+  //   try {
+  //     deleteReq(requisition._id);
+  //     setRedirect(true);
+  //   } catch (error) {
+  //     setMessage("Something went wrong! " + error.message);
+  //   }
+  // };
 
   const saveDraft = async function(postStatus) {
     try {
@@ -100,7 +99,9 @@ const NewReq = () => {
           onChange={handleChange}
         />
         <br />
-        <button onClick={() => discardDraft()}>Discard</button>
+        <button onClick={() => dispatch(deleteReq(requisition._id))}>
+          Discard
+        </button>
         <button onClick={() => saveDraft("draft")}>Save Draft</button>
         <button onClick={() => saveDraft("final")}>Submit</button>
         <p>{message}</p>
@@ -109,4 +110,4 @@ const NewReq = () => {
   );
 };
 
-export default NewReq;
+export default connect()(NewReq);

@@ -1,30 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { defaultReq, defaultPostParams } from "../lib/defaults.js";
-import { deleteReq } from "../lib/dataFetchHelpers";
+import { defaultReq } from "../../lib/defaults.js";
 import { Link } from "react-router-dom";
-import _ from "lodash";
+import { connect } from "react-redux";
+import { fetchReqs } from "actions/reqs";
+import { deleteReq, submitReq } from "actions/req";
 
-const Reqs = () => {
-  const [reqs, setReqs] = useState([]);
-  const [message, setMessage] = useState("");
+const Reqs = ({ dispatch, reqs }) => {
   const [formData, setFormData] = useState(defaultReq);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch("/reqs");
-
-        if (response.ok) {
-          const data = await response.json();
-          setReqs(data.data);
-        } else {
-          throw new Error(response.statusText);
-        }
-      } catch (error) {
-        setMessage("Something went wrong: " + error.message);
-      }
-    }
-    fetchData();
+    dispatch(fetchReqs());
   }, []);
 
   const handleChange = e => {
@@ -36,42 +21,18 @@ const Reqs = () => {
   const handleSubmit = e => {
     e.preventDefault();
     if (!formData.title) {
-      setMessage("A title is required.");
       return;
     }
-    postReq(formData);
-  };
-
-  const postReq = async formData => {
-    try {
-      const response = await fetch("/reqs", {
-        ...defaultPostParams,
-        body: JSON.stringify(formData) // body data type must match "Content-Type" header
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setReqs([...reqs, data.data]);
-        setMessage(data.message);
-      } else {
-        throw new Error(response.statusText);
-      }
-    } catch (error) {
-      setMessage(error.message); // parses JSON response into native Javascript objects
-    }
-  };
-
-  const handleDelete = async id => {
-    try {
-      const data = await deleteReq(id);
-      setReqs(_.remove(reqs, i => i._id !== id));
-    } catch (error) {
-      setMessage(`Something went wrong: ${error.message}`);
-    }
+    dispatch(submitReq(formData));
   };
 
   return (
     <>
+      <button onClick={() => dispatch("success", "this is a test!")}>
+        Click Me!
+      </button>
       <fieldset>
+        <h4>Title</h4>
         <textarea
           name="title"
           onChange={handleChange}
@@ -111,20 +72,25 @@ const Reqs = () => {
         <header className="Reqs-header">
           <ul>
             {/* {console.log(data)} */}
-            {reqs.map(req => (
+            {reqs.reqs.map(req => (
               <li key={req._id}>
                 <Link to={`reqs/${req._id}`}>
                   {req.title} {req.draft ? "(Draft)" : ""}
                 </Link>
-                <button onClick={() => handleDelete(req._id)}>Delete</button>
+                <button onClick={() => dispatch(deleteReq(req._id))}>
+                  Delete
+                </button>
               </li>
             ))}
           </ul>
-          <p>{message}</p>
         </header>
       </div>
     </>
   );
 };
 
-export default Reqs;
+const mapStateToProps = state => {
+  return { reqs: state.reqs || [] };
+};
+
+export default connect(mapStateToProps)(Reqs);

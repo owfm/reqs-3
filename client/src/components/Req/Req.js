@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { defaultReq } from "../lib/defaults";
-import { debouncedPostPatch } from "../lib/dataFetchHelpers";
-import _ from "lodash";
+import { connect } from "react-redux";
+import { defaultReq } from "../../lib/defaults";
+import { fetchReqsFailure } from "actions/reqs";
+import emitSnackbar from "actions/snackbar";
 
-const Req = ({ match }) => {
+const Req = ({ match, dispatch }) => {
   const [requisition, setRequisition] = useState(defaultReq);
-  const [saveState, setSaveState] = useState({ saving: false, error: false });
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const { id } = match.params;
@@ -23,24 +22,23 @@ const Req = ({ match }) => {
         setRequisition(data);
       })
       .catch(error => {
-        setMessage("Something went wrong! " + error.message);
+        dispatch(emitSnackbar("Something went wrong! " + error.message));
+        dispatch(fetchReqsFailure(error));
       });
   }, []);
+
+  // useEffect(() => {
+  //   dispatch(updateReq(requisition));
+  // }, [requisition]);
 
   const handleChange = function(e) {
     let form = { ...requisition };
     form[e.target.name] = e.target.value;
     setRequisition(form);
-    try {
-      debouncedPostPatch(match.params.id, requisition);
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   return (
     <div>
-      {saveState.saving ? <p>Saving...</p> : <p>Changes up to date.</p>}
       <fieldset>
         <input
           type="text"
@@ -65,9 +63,9 @@ const Req = ({ match }) => {
           value={requisition.notes}
           onChange={handleChange}
         />
-        <p>{message}</p>
       </fieldset>
     </div>
   );
 };
-export default Req;
+
+export default connect()(Req);

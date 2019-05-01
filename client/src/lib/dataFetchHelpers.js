@@ -5,7 +5,7 @@ const postPatch = async function(id, requisition) {
     const response = await fetch(`/reqs/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requisition)
+      body: JSON.stringify(requisition),
     });
     if (response.ok) {
       return response.json();
@@ -17,13 +17,4 @@ const postPatch = async function(id, requisition) {
 
 const debouncedPostPatch = _.debounce(postPatch, 500, { trailing: true });
 
-const deleteReq = async id => {
-  const response = await fetch(`/reqs/${id}`, { method: "DELETE" });
-  if (response.ok) {
-    return response.json();
-  } else {
-    throw new Error(response.statusText);
-  }
-};
-
-export { postPatch, debouncedPostPatch, deleteReq };
+export { postPatch, debouncedPostPatch };
