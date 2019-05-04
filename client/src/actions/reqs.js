@@ -1,25 +1,22 @@
-import {
-  FETCH_REQS_REQUEST,
-  FETCH_REQS_FAILURE,
-  FETCH_REQS_SUCCESS,
-} from "actions/types";
+import * as actions from "actions/types";
+import { handleErrors } from "actions/utils";
 
 const fetchReqsRequest = () => {
   return {
-    type: FETCH_REQS_REQUEST,
+    type: actions.FETCH_REQS_REQUEST,
   };
 };
 
 export const fetchReqsFailure = error => {
   return {
-    type: FETCH_REQS_FAILURE,
+    type: actions.FETCH_REQS_FAILURE,
     payload: error,
   };
 };
 
 const fetchReqsSuccess = reqs => {
   return {
-    type: FETCH_REQS_SUCCESS,
+    type: actions.FETCH_REQS_SUCCESS,
     payload: reqs,
   };
 };
@@ -27,12 +24,15 @@ const fetchReqsSuccess = reqs => {
 export function fetchReqs() {
   return dispatch => {
     dispatch(fetchReqsRequest());
-
     return fetch("/reqs")
-      .then(
-        response => response.json(),
-        error => dispatch(fetchReqsFailure(new Error(error.message)))
-      )
-      .then(json => dispatch(fetchReqsSuccess(json.data)));
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(json => {
+        dispatch(fetchReqsSuccess(json.data));
+        return json.data;
+      })
+      .catch(error => {
+        fetchReqsFailure(error);
+      });
   };
 }

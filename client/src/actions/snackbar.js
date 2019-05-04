@@ -9,6 +9,7 @@ const closeSnackbar = () => {
 };
 
 const emitSnackbarWithTimeout = message => dispatch => {
+  console.log(`Message: ${message}`);
   dispatch(emitSnackbar(message));
   setTimeout(() => dispatch(closeSnackbar()), 3000);
 };

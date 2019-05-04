@@ -1,71 +1,86 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { defaultReq } from "../../lib/defaults";
-import { fetchReqsFailure } from "actions/reqs";
+import { deleteReq, updateReq, fetchSingleReq } from "actions/req";
 import emitSnackbar from "actions/snackbar";
+import ReqPresentation from "./ReqPresentation";
 
-const Req = ({ match, dispatch }) => {
-  const [requisition, setRequisition] = useState(defaultReq);
+const Req = ({
+  fetchReq,
+  deleteReq,
+  updateReq,
+  emitSnackbar,
+  match,
+  loading,
+  history,
+}) => {
+  const [requisition, setRequisition] = useState();
 
   useEffect(() => {
-    const { id } = match.params;
-
-    fetch(`/reqs/${id}`)
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error(response.statusText);
-        }
-      })
-      .then(data => {
-        setRequisition(data);
-      })
-      .catch(error => {
-        dispatch(emitSnackbar("Something went wrong! " + error.message));
-        dispatch(fetchReqsFailure(error));
-      });
+    (async id => {
+      const req = await fetchReq(id);
+      setRequisition(req);
+    })(match.params.id);
   }, []);
 
-  // useEffect(() => {
-  //   dispatch(updateReq(requisition));
-  // }, [requisition]);
-
   const handleChange = function(e) {
-    let form = { ...requisition };
-    form[e.target.name] = e.target.value;
-    setRequisition(form);
+    setRequisition({ ...requisition, [e.target.name]: e.target.value });
   };
 
-  return (
-    <div>
-      <fieldset>
-        <input
-          type="text"
-          name="title"
-          value={requisition.title}
-          onChange={handleChange}
-        />
-        {requisition.day}
-        {requisition.period}
-        <h3>Equipment</h3>
-        <input
-          type="text"
-          name="equipment"
-          value={requisition.equipment}
-          onChange={handleChange}
-        />
+  const save = async function(draft) {
+    try {
+      await updateReq({ ...requisition, draft: draft === "draft" });
+      emitSnackbar(
+        `Requisition ${draft === "draft" ? " saved as draft." : "submitted!"}`
+      );
+    } catch (error) {
+      emitSnackbar(`Something went wrong: ${error.message}`);
+    }
+    history.push("/reqs");
+  };
 
-        <h3>Notes</h3>
-        <input
-          type="text"
-          name="notes"
-          value={requisition.notes}
-          onChange={handleChange}
-        />
-      </fieldset>
-    </div>
+  const discard = async function(id) {
+    try {
+      await deleteReq(id);
+      emitSnackbar("Requisition deleted.");
+    } catch (error) {
+      emitSnackbar(error.message);
+    }
+    history.push("/reqs");
+  };
+
+  if (!requisition || loading) {
+    return <p>Loading...</p>;
+  }
+
+  return (
+    <ReqPresentation
+      requisition={requisition}
+      save={save}
+      discard={discard}
+      handleChange={handleChange}
+    />
   );
 };
 
-export default connect()(Req);
+function mapDispatchToProps(dispatch) {
+  return {
+    fetchReq: id => dispatch(fetchSingleReq(id)),
+    updateReq: req => dispatch(updateReq(req)),
+    deleteReq: id => dispatch(deleteReq(id)),
+    emitSnackbar: message => dispatch(emitSnackbar(message)),
+  };
+}
+
+function mapStateToProps(state) {
+  const { loading, error } = state.reqs;
+
+  return {
+    loading,
+    error,
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Req);
