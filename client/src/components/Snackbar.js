@@ -5,11 +5,17 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import { closeSnackbar } from "actions/snackbar";
 import { restoreDeletedReq } from "actions/req";
-
 import { connect } from "react-redux";
 
-const SnackbarWrapper = ({ snackbar, handleUndo }) => {
+const SnackbarWrapper = ({ snackbar, closeSnackbar, handleUndo }) => {
   if (!snackbar.open) return null;
+
+  function handleClose(event, reason) {
+    if (reason === "clickaway") {
+      return;
+    }
+    closeSnackbar();
+  }
 
   if (snackbar.undoable) {
     return (
@@ -33,6 +39,15 @@ const SnackbarWrapper = ({ snackbar, handleUndo }) => {
           >
             UNDO
           </Button>,
+          <IconButton
+            key="close"
+            aria-label="Close"
+            color="inherit"
+            // className={classes.close}
+            onClick={handleClose}
+          >
+            <CloseIcon />
+          </IconButton>,
         ]}
       />
     );
@@ -50,6 +65,17 @@ const SnackbarWrapper = ({ snackbar, handleUndo }) => {
         "aria-describedby": "message-id",
       }}
       message={<span id="message-id">{snackbar.message}</span>}
+      action={
+        <IconButton
+          key="close"
+          aria-label="Close"
+          color="inherit"
+          // className={classes.close}
+          onClick={handleClose}
+        >
+          <CloseIcon />
+        </IconButton>
+      }
     />
   );
 };

@@ -1,6 +1,5 @@
 import * as actions from "actions/types";
 import { handleErrors } from "actions/utils";
-import axios from "axios";
 import { defaultPostParams } from "lib/defaults";
 import emitSnackbarWithTimeout from "./snackbar";
 

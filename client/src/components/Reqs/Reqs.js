@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { fetchReqs } from "actions/reqs";
 import emitSnackbar from "actions/snackbar";
-import { deleteReq, restoreDeletedReq } from "actions/req";
+import { deleteReq } from "actions/req";
 import NewReqActionButton from "components/NewReqActionButton";
 import { Icon } from "semantic-ui-react";
 

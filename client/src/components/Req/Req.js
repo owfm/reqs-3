@@ -42,6 +42,9 @@ const Req = ({
     try {
       await updateReq({ ...requisition, isDone: !requisition.isDone });
       setRequisition({ ...requisition, isDone: !requisition.isDone });
+      emitSnackbar(
+        `Req marked as ${!requisition.isDone ? "done!" : "still to do."}`
+      );
     } catch (error) {
       emitSnackbar(`Something went wrong: ${error.message}`);
     }
