@@ -7,21 +7,24 @@ import Req from "components/Req/Req";
 import Snackbar from "components/Snackbar";
 import { Provider } from "react-redux";
 import store from "store";
+import CssBaseline from "@material-ui/core/CssBaseline";
 
 function App() {
   return (
     <Provider store={store}>
       <Router>
         <>
-          <LoadingBar />
-          <Header />
-          <Switch>
-            <Route path="/about" component={About} />
-            <Route exact path={`/reqs/`} component={Reqs} />
-            <Route path={`/reqs/:id`} component={Req} />
-            <Route path={"/tits"} component={Tits} />
-            <Route component={NotFound} />
-          </Switch>
+          <CssBaseline>
+            <LoadingBar />
+            <Header />
+            <Switch>
+              <Route path="/about" component={About} />
+              <Route exact path={`/reqs/`} component={Reqs} />
+              <Route path={`/reqs/:id`} component={Req} />
+              <Route path={"/tits"} component={Tits} />
+              <Route component={NotFound} />
+            </Switch>
+          </CssBaseline>
         </>
       </Router>
       <Snackbar />

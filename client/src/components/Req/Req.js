@@ -38,6 +38,15 @@ const Req = ({
     history.push("/reqs");
   };
 
+  const toggleDone = async () => {
+    try {
+      await updateReq({ ...requisition, isDone: !requisition.isDone });
+      setRequisition({ ...requisition, isDone: !requisition.isDone });
+    } catch (error) {
+      emitSnackbar(`Something went wrong: ${error.message}`);
+    }
+  };
+
   const discard = async function(id) {
     try {
       await deleteReq(id);
@@ -54,6 +63,7 @@ const Req = ({
 
   return (
     <ReqPresentation
+      toggleDone={toggleDone}
       requisition={requisition}
       save={save}
       discard={discard}

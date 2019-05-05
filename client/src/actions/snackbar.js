@@ -1,17 +1,18 @@
 import { EMIT_SNACKBAR, CLOSE_SNACKBAR } from "actions/types";
 
-const emitSnackbar = message => {
-  return { type: EMIT_SNACKBAR, payload: message };
+const emitSnackbar = (message, undoable) => {
+  return { type: EMIT_SNACKBAR, payload: { message, undoable } };
 };
 
-const closeSnackbar = () => {
+export const closeSnackbar = () => {
   return { type: CLOSE_SNACKBAR };
 };
 
-const emitSnackbarWithTimeout = message => dispatch => {
-  console.log(`Message: ${message}`);
-  dispatch(emitSnackbar(message));
-  setTimeout(() => dispatch(closeSnackbar()), 3000);
+const emitSnackbarWithTimeout = (message, undoable = false) => dispatch => {
+  dispatch(emitSnackbar(message, undoable));
+  if (!undoable) {
+    setTimeout(() => dispatch(closeSnackbar()), 6000);
+  }
 };
 
 export default emitSnackbarWithTimeout;

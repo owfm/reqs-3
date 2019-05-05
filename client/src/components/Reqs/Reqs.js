@@ -34,7 +34,6 @@ const Reqs = ({ dispatch, items, error }) => {
           </ul>
         </header>
       </div>
-      <button onClick={() => dispatch(restoreDeletedReq())}>Undo</button>
       <NewReqActionButton />
     </>
   );

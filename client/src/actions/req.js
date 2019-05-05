@@ -2,6 +2,7 @@ import * as actions from "actions/types";
 import { handleErrors } from "actions/utils";
 import axios from "axios";
 import { defaultPostParams } from "lib/defaults";
+import emitSnackbarWithTimeout from "./snackbar";
 
 const requestDeleteReq = id => {
   return {
@@ -31,7 +32,9 @@ export const deleteReq = id => {
     return await fetch(`/reqs/${id}`, { method: "DELETE" })
       .then(handleErrors)
       .then(() => {
+        const undoable = true;
         dispatch(deleteReqsSuccess(id));
+        dispatch(emitSnackbarWithTimeout("Requisition deleted", undoable));
       })
       .catch(error => dispatch(deleteReqFailure(error)));
   };
@@ -180,6 +183,7 @@ export function restoreDeletedReq() {
       const submitted = await dispatch(submitReq(deleted));
       if (submitted) {
         dispatch(restoreDeletedReqSuccess());
+        dispatch(emitSnackbarWithTimeout("Requisition restored."));
       }
     } else {
       dispatch(restoreDeletedReqFailure());

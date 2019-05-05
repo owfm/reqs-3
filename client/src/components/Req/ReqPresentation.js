@@ -1,17 +1,34 @@
 import React from "react";
-import { Input, Form, TextArea, Button } from "semantic-ui-react";
+import {
+  Input,
+  Form,
+  TextArea,
+  Button,
+  Icon,
+  Checkbox,
+  Divider,
+} from "semantic-ui-react";
 import { ReqPageContainer } from "./styles";
-import { Icon } from "semantic-ui-react";
+import {} from "semantic-ui-react";
+import {} from "semantic-ui-react";
 
 const styles = {
-  title: { fontWeight: "bold", fontSize: "1.3rem" },
+  title: { fontWeight: "bold", fontSize: "1.05rem" },
   textArea: {},
 };
 
-const ReqPresentation = ({ requisition, handleChange, save, discard }) => {
+const ReqPresentation = ({
+  requisition,
+  handleChange,
+  toggleDone,
+  save,
+  discard,
+}) => {
   return (
     <ReqPageContainer>
       <Form>
+        <h5>Lesson Title</h5>
+
         <Input
           style={styles.title}
           placeholder={"What's your lesson title?"}
@@ -35,7 +52,14 @@ const ReqPresentation = ({ requisition, handleChange, save, discard }) => {
           name={"notes"}
           onChange={handleChange}
         />
-        <br />
+        <Divider />
+        <Checkbox
+          checked={requisition.isDone}
+          onChange={toggleDone}
+          toggle
+          label="Mark this requisition as done."
+        />
+        <Divider />
         <Button.Group>
           <Button
             onClick={e => {
