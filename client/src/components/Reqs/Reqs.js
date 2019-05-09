@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { Icon } from "semantic-ui-react";
+import requireAuth from "components/requireAuth";
+import NewReqActionButton from "components/NewReqActionButton";
 import { fetchReqs } from "actions/reqs";
 import emitSnackbar from "actions/snackbar";
 import { deleteReq } from "actions/req";
-import NewReqActionButton from "components/NewReqActionButton";
-import { Icon } from "semantic-ui-react";
 
 const Reqs = ({ dispatch, items, error }) => {
   useEffect(() => {

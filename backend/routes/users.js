@@ -1,10 +1,10 @@
 var express = require("express");
 var router = express.Router();
 
-/* GET users listing. */
-router.get("/", function(req, res, next) {
-	res.setHeader("Content-Type", "application/json");
-	res.end(JSON.stringify({ message: "This came from users route!" }));
-});
+var userController = require("../controllers/userController");
 
+router.get("/", userController.getAllUsers);
+router.get("/:id", userController.getUserById);
+// router.delete("/:id", userController.deleteSingleUser);
+router.put("/:id", userController.patchUser);
 module.exports = router;

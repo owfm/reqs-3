@@ -27,3 +27,6 @@ export const RESTORE_DELETED_REQ_FAILURE = "RESTORE_DELETED_REQ_FAILURE";
 
 // UI constants
 export const SET_PROGRESS_BAR = "SET_PROGRESS_BAR";
+
+export const AUTH_USER = "auth_user";
+export const AUTH_ERROR = "auth_error";

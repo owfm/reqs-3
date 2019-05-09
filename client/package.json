@@ -20,6 +20,7 @@
     "react-topbar-progress-indicator": "^2.0.0",
     "redux": "^4.0.1",
     "redux-actions": "^2.6.5",
+    "redux-form": "^8.2.0",
     "redux-thunk": "^2.3.0",
     "redux-undo": "^0.6.1",
     "semantic-ui-react": "^0.86.0",

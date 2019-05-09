@@ -1,6 +1,5 @@
 import * as actions from "actions/types";
 import { handleErrors } from "actions/utils";
-import { defaultPostParams } from "lib/defaults";
 import emitSnackbarWithTimeout from "./snackbar";
 
 const requestDeleteReq = id => {
@@ -64,7 +63,8 @@ export function submitReq(requisition) {
     dispatch(submitReqRequest(requisition));
 
     return await fetch("/reqs", {
-      ...defaultPostParams,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requisition),
     })
       .then(handleErrors)
