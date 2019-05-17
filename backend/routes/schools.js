@@ -5,9 +5,9 @@ var schoolController = require("../controllers/schoolController");
 
 const requireAuth = passport.authenticate("jwt", { session: false });
 
-router.get("/", requireAuth, schoolController.getAllSchools);
-router.get("/:id", requireAuth, schoolController.getSchoolById);
-router.post("/", requireAuth, schoolController.postNewSchool);
-router.delete("/:id", requireAuth, schoolController.deleteSingleSchool);
-router.put("/:id", requireAuth, schoolController.patchSchool);
+router.get("/", schoolController.getAllSchools);
+router.get("/:id", schoolController.getSchoolById);
+router.post("/", schoolController.postNewSchool);
+router.delete("/:id", schoolController.deleteSingleSchool);
+router.put("/:id", schoolController.patchSchool);
 module.exports = router;

@@ -12,6 +12,7 @@
     "lodash.find": "^4.6.0",
     "lodash.remove": "^4.7.0",
     "node-env-run": "^3.0.2",
+    "normalizr": "^3.3.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.2",

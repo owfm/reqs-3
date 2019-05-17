@@ -25,12 +25,7 @@ exports.getSchoolById = (request, response) => {
 };
 
 exports.postNewSchool = (request, response) => {
-  var newSchool = new School();
-  const keys = Object.keys(request.body);
-  keys.map(key => (newSchool[key] = request.body[key]));
-
-  newSchool.createdAt = Date.now();
-
+  var newSchool = new School({ ...request.body, createdAt: Date.now() });
   newSchool.save(function(err, school) {
     if (err) {
       response.status(400);
@@ -62,14 +57,16 @@ exports.deleteSingleSchool = (request, response) => {
 };
 
 exports.patchSchool = (request, response) => {
-  let patchObject = { ...request.body };
-  patchObject.updatedAt = Date.now();
-
-  School.findByIdAndUpdate(request.params.id, patchObject, function(err, req) {
-    if (err) {
-      console.log(err);
-    } else {
-      response.send(JSON.stringify({ data: req }));
+  School.findByIdAndUpdate(
+    request.params.id,
+    { ...request.body, updatedAt: Date.now() },
+    { new: true },
+    function(err, req) {
+      if (err) {
+        console.log(err);
+      } else {
+        response.send(JSON.stringify({ data: req }));
+      }
     }
-  });
+  );
 };

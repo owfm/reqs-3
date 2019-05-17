@@ -107,7 +107,9 @@ export function updateReq(requisition) {
       body: JSON.stringify(requisition),
     })
       .then(handleErrors)
-      .then(response => response.json())
+      .then(response => {
+        return response.json();
+      })
       .then(json => {
         dispatch(updateReqSuccess(json.data));
         return json.data;

@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import {
   Input,
   Form,
@@ -9,14 +10,21 @@ import {
   Divider,
 } from "semantic-ui-react";
 import { ReqPageContainer } from "./styles";
-import {} from "semantic-ui-react";
-import {} from "semantic-ui-react";
 
 const styles = {
   title: { fontWeight: "bold", fontSize: "1.05rem" },
   textArea: {},
+  heading: { padding: 0, marginBottom: 0 },
+  subheading: { fontWeight: 100, marginTop: 0 },
 };
 
+const Heading = styled.h1`
+  margin-bottom: 0;
+`;
+const SubHeading = styled.h3`
+  margin-top: 0;
+  color: #474a4f;
+`;
 const ReqPresentation = ({
   requisition,
   handleChange,
@@ -26,6 +34,17 @@ const ReqPresentation = ({
 }) => {
   return (
     <ReqPageContainer>
+      <span>
+        <Heading styles={styles.heading}>
+          {requisition.lesson.classgroup}
+        </Heading>
+        <SubHeading styles={styles.subheading}>
+          {requisition.lesson.week}
+          {requisition.lesson.day}
+          {requisition.lesson.period}
+        </SubHeading>
+      </span>
+      <Divider />
       <Form>
         <h5>Lesson Title</h5>
 

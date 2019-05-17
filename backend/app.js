@@ -13,19 +13,28 @@ mongoose.connect("mongodb://localhost/auth", { useNewUrlParser: true });
 
 app.use(morgan("combined"));
 app.use(cors());
-app.use(bodyParser.json({ type: "*/*" }));
+const jsonParser = bodyParser.json({ type: "*/*" });
 
 var authRouter = require("./routes/auth");
 var usersRouter = require("./routes/users");
 var reqsRouter = require("./routes/reqs");
-var schoolRouter = require("./routes/schools");
+var schoolsRouter = require("./routes/schools");
+var uploadRouter = require("./routes/upload");
+var lessonsRouter = require("./routes/lessons");
 
-app.use("/auth", authRouter);
-app.use("/users", requireAuth, usersRouter);
-app.use("/reqs", requireAuth, reqsRouter);
-app.use("/schools", schoolRouter);
-app.get("/test", function(req, res) {
-  res.send({ test: "route" });
+app.use("/auth", jsonParser, authRouter);
+app.use("/users", jsonParser, usersRouter);
+app.use("/reqs", jsonParser, reqsRouter);
+app.use("/schools", jsonParser, schoolsRouter);
+app.use("/lessons", jsonParser, lessonsRouter);
+app.use("/upload", uploadRouter);
+
+// error handling
+app.use(function(error, req, res, next) {
+  console.log(error);
+  res
+    .status(500)
+    .send({ data: null, error: { message: "Something went wrong!" } });
 });
 
 module.exports = app;

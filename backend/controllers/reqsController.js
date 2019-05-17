@@ -1,79 +1,88 @@
 var Req = require("../models/req");
 
 exports.getAllReqs = (request, response) => {
-  Req.find({}).exec(function(err, reqs) {
-    if (err) {
-      response.status(500);
-      response.send(
-        JSON.stringify({
+  Req.find({})
+    .populate({
+      path: "lesson",
+      populate: { path: "school teacher" },
+    })
+    .exec(function(error, reqs) {
+      if (error) {
+        response.status(500);
+        response.json({
           data: null,
-          errors: err
-        })
-      );
-    } else {
-      response.send(JSON.stringify({ data: reqs }));
-    }
-  });
+          error: new Error(
+            "Sorry, something went wrong fetching your requisitions."
+          ),
+        });
+      } else {
+        response.json({ data: reqs, error: null });
+      }
+    });
 };
 
 exports.getReqById = (request, response) => {
-  Req.findById(request.params.id, function(err, req) {
-    if (err) {
-      if (err.kind == "ObjectId") {
-        response.status(404).end();
+  // TODO: check user has same school as requisition
+  console.log(request.params.id);
+  Req.findById(request.params.id)
+    .populate({ path: "lesson", populate: { path: "teacher" } })
+    .populate({ path: "school" })
+    .exec(function(error, req) {
+      if (error) {
+        response
+          .status(404)
+          .json({ error: new Error("Sorry, could't find that requisition.") });
+      } else {
+        response.json({ data: req });
       }
-    } else {
-      response.send(JSON.stringify(req));
-    }
-  });
+    });
 };
 
 exports.postNewReq = (request, response) => {
-  var newReq = new Req();
-  const keys = Object.keys(request.body);
-  keys.map(key => (newReq[key] = request.body[key]));
+  // TODOcheck authorised to add req
+  // TODO get submitting teacher id from authorisation header
 
-  newReq.createdAt = Date.now();
+  var newReq = new Req({
+    ...request.body,
+    teacher: "5cd450445819b885d01f65d4",
+    createdAt: Date.now(),
+  });
 
-  newReq.save(function(err, req) {
-    if (err) {
-      response.status(400);
-      response.send(JSON.stringify({ data: err }));
+  newReq.save(function(error, req) {
+    if (error) {
+      response.status(400).json({ data: null, error });
     } else {
-      response.send({
-        data: req
+      response.status(201).json({
+        data: req,
       });
     }
   });
 };
 
 exports.deleteSingleReq = (request, response) => {
-  Req.deleteOne({ _id: request.params.id }, function(err) {
-    if (err) {
-      if (err.kind == "ObjectId") {
-        response.status(404);
-        response.send(
-          JSON.stringify({
-            data: null,
-            errors: err
-          })
-        );
-      }
+  Req.deleteOne({ _id: request.params.id }, function(error) {
+    if (error) {
+      response.status(400).json({ data: null, error });
     } else {
-      response.send(JSON.stringify({ data: null }));
+      response.status(204).json({ data: null, error: null });
     }
   });
 };
 
 exports.patchReq = (request, response) => {
-  let patchObject = { ...request.body };
-  patchObject.updatedAt = Date.now();
-
-  Req.findByIdAndUpdate(request.params.id, patchObject, function(err, req) {
-    if (err) {
-      console.log(err);
-    } else {
-      response.send(JSON.stringify({ data: req }));
+  Req.findByIdAndUpdate(
+    request.params.id,
+    { ...request.body, updatedAt: Date.now() },
+    { new: true },
+    function(error, req) {
+      if (error) {
+        response.status(404).json({
+          data: null,
+          error: new Error("Sorry, couldn't update that requisition."),
+        });
+      } else {
+        response.status(204).json({ data: req, error: null });
+      }
     }
-  });
+  );
 };

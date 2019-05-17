@@ -5,6 +5,7 @@ import emitSnackbar from "actions/snackbar";
 import ReqPresentation from "./ReqPresentation";
 
 const Req = ({
+  error,
   fetchReq,
   deleteReq,
   updateReq,
@@ -17,8 +18,8 @@ const Req = ({
 
   useEffect(() => {
     (async id => {
-      const req = await fetchReq(id);
-      setRequisition(req);
+      const response = await fetchReq(id);
+      setRequisition(response.data);
     })(match.params.id);
   }, []);
 
@@ -35,7 +36,7 @@ const Req = ({
     } catch (error) {
       emitSnackbar(`Something went wrong: ${error.message}`);
     }
-    history.push("/reqs");
+    history.push("/lessons");
   };
 
   const toggleDone = async () => {
@@ -57,11 +58,15 @@ const Req = ({
     } catch (error) {
       emitSnackbar(error.message);
     }
-    history.push("/reqs");
+    history.push("/lessons");
   };
 
   if (!requisition || loading) {
     return <p>Loading...</p>;
+  }
+
+  if (error) {
+    emitSnackbar(error.message);
   }
 
   return (

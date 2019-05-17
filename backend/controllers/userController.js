@@ -18,13 +18,21 @@ exports.getUserById = async (request, response) => {
   }
 };
 
-exports.patchUser = async (request, response) => {
+exports.patchUser = (request, response) => {
   let patchObject = { ...request.body };
   patchObject.updatedAt = Date.now();
-  try {
-    const user = await User.findByIdAndUpdate(request.params.id, patchObject);
-    response.send({ data: user });
-  } catch (err) {
-    response.status(400).send({ data: null, errors: err });
-  }
+
+  User.findByIdAndUpdate(
+    request.params.id,
+    { ...request.body, updatedAt: Date.now() },
+    { new: true },
+    function(error, user) {
+      if (error) {
+        response
+          .status(400)
+          .json({ data: null, error: new Error("Could not update user.") });
+      }
+      response.json({ data: user });
+    }
+  );
 };

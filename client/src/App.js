@@ -1,7 +1,8 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "store";
+import history from "history/history";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import TopBar from "components/TopBar";
@@ -10,6 +11,7 @@ import Signup from "components/auth/Signup";
 import Signout from "components/auth/Signout";
 import Signin from "components/auth/Signin";
 import Reqs from "components/Reqs/Reqs";
+import Lessons from "components/Lessons";
 import Header from "components/Header";
 import LoadingBar from "components/LoadingBar";
 import Req from "components/Req/Req";
@@ -18,12 +20,15 @@ import CreateSchool from "components/CreateSchool";
 
 import UserSelector from "components/userSelector";
 
-const theme = createMuiTheme();
-
+const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
+});
 function App() {
   return (
     <Provider store={store}>
-      <Router>
+      <Router history={history}>
         <>
           <CssBaseline>
             <MuiThemeProvider theme={theme}>
@@ -39,7 +44,7 @@ function App() {
                 <Route path="/newschool" component={CreateSchool} />
                 <Route exact path={`/reqs/`} component={Reqs} />
                 <Route path={`/reqs/:id`} component={Req} />
-                <Route path={"/tits"} component={Tits} />
+                <Route exact path={`/lessons/`} component={Lessons} />
                 <Route component={NotFound} />
               </Switch>
               <Snackbar />
@@ -51,10 +56,6 @@ function App() {
     </Provider>
   );
 }
-
-const Tits = () => {
-  return <p>tits</p>;
-};
 
 function About() {
   return <h2>About</h2>;
