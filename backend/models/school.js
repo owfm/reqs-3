@@ -16,3 +16,12 @@ SchoolSchema.post("save", function(error, doc, next) {
 });
 
 module.exports = mongoose.model("School", SchoolSchema);
+
+// const defaultSchoolPreferences = {
+//   periods: 6,
+//   periodStartTimes: {
+//     1: newDate().setHours(9),
+//     2: newDate().setHours(10),
+//     3: newDate().setHours(11, 20)
+//   }
+// }

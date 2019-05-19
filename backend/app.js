@@ -9,7 +9,10 @@ const requireAuth = require("./routes/auth");
 
 // set up DB
 const { MONGO_PASS } = process.env;
-mongoose.connect("mongodb://localhost/auth", { useNewUrlParser: true });
+mongoose.connect(
+  `mongodb+srv://reqs-admin:${MONGO_PASS}@reqs-cluster-0-k8nns.mongodb.net/test?retryWrites=true`,
+  { useNewUrlParser: true }
+);
 
 app.use(morgan("combined"));
 app.use(cors());

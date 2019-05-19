@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import requireAuth from "components/requireAuth";
 import { Input, Form, Button, Icon, Divider } from "semantic-ui-react";
+import emitSnackbar from "actions/snackbar";
+import history from "history/history";
 
-const CreateSchool = ({ auth }) => {
+const CreateSchool = ({ auth, dispatch }) => {
   const [school, setSchool] = useState({ name: "" });
 
   const handleChange = e => {
@@ -11,13 +13,18 @@ const CreateSchool = ({ auth }) => {
   };
 
   const save = async () => {
-    const response = await fetch("/school", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(school),
-    });
-    const json = response.json();
-    console.log(json);
+    try {
+      const response = await fetch("/school", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(school),
+      });
+      if (response.ok) {
+        const json = response.json();
+        dispatch(emitSnackbar(`School ${json.data.name} created.`));
+        history.push("/lessons");
+      }
+    } catch (err) {}
   };
 
   return (

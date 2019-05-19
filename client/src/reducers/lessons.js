@@ -1,9 +1,11 @@
 import * as actions from "actions/types";
 import remove from "lodash.remove";
+import merge from "lodash.merge";
 
 const initialState = {
   fetching: false,
   error: null,
+  byId: {},
   byPeriod: [],
 };
 
@@ -16,12 +18,15 @@ export default function(state = initialState, action) {
     case actions.FETCH_LESSONS_FAILURE:
     case actions.DELETE_LESSON_FAILURE:
       return { ...state, fetching: false, error: action.payload };
+
+    case actions.FETCH_REQ_SUCCESS:
+    case actions.FETCH_REQS_SUCCESS:
     case actions.FETCH_LESSONS_SUCCESS:
       return {
         ...state,
         fetching: false,
         error: null,
-        byPeriod: getLessonsByPeriod(action.payload),
+        byId: merge({}, action.payload.entities.lessons, state.byId),
       };
 
     case actions.DELETE_LESSON_SUCCESS:
@@ -29,29 +34,10 @@ export default function(state = initialState, action) {
         ...state,
         fetching: false,
         error: null,
-        items: remove(state.items, item => item._id !== action.payload),
+        byId: remove(state.items, item => item._id !== action.payload),
       };
 
     default:
       return state;
   }
 }
-
-const getLessonsByPeriod = lessons => {
-  let lessonsByPeriod = {};
-  for (var i = 0; i < lessons.length; i++) {
-    let { week, day, period } = lessons[i];
-    let session;
-    if (!day || !period) {
-      return false;
-    }
-    if (!week) {
-      session = lessons[i].day + lessons[i].period;
-    } else {
-      session = lessons[i].week + lessons[i].day + lessons[i].period;
-    }
-    lessonsByPeriod[session] = { ...lessons[i] };
-  }
-
-  return lessonsByPeriod;
-};

@@ -1,20 +1,15 @@
 var Req = require("../models/req");
 
-exports.getAllReqs = (request, response) => {
+exports.getAllReqs = (request, response, next) => {
   Req.find({})
+    .populate("teacher")
     .populate({
       path: "lesson",
       populate: { path: "school teacher" },
     })
     .exec(function(error, reqs) {
       if (error) {
-        response.status(500);
-        response.json({
-          data: null,
-          error: new Error(
-            "Sorry, something went wrong fetching your requisitions."
-          ),
-        });
+        next(error);
       } else {
         response.json({ data: reqs, error: null });
       }
@@ -23,7 +18,6 @@ exports.getAllReqs = (request, response) => {
 
 exports.getReqById = (request, response) => {
   // TODO: check user has same school as requisition
-  console.log(request.params.id);
   Req.findById(request.params.id)
     .populate({ path: "lesson", populate: { path: "teacher" } })
     .populate({ path: "school" })
@@ -48,14 +42,18 @@ exports.postNewReq = (request, response) => {
     createdAt: Date.now(),
   });
 
-  newReq.save(function(error, req) {
+  newReq.save(function(error) {
     if (error) {
       response.status(400).json({ data: null, error });
-    } else {
-      response.status(201).json({
-        data: req,
-      });
     }
+    newReq
+      .populate({ path: "lesson", populate: { path: "teacher" } })
+      .populate({ path: "school" }, function(error, req) {
+        if (error) {
+          response.status(400).json({ data: null, error });
+        }
+        response.json({ error: null, data: req });
+      });
   });
 };
 
@@ -73,16 +71,18 @@ exports.patchReq = (request, response) => {
   Req.findByIdAndUpdate(
     request.params.id,
     { ...request.body, updatedAt: Date.now() },
-    { new: true },
-    function(error, req) {
+    { new: true }
+  )
+    .populate({ path: "lesson", populate: { path: "teacher" } })
+    .populate({ path: "school" })
+    .exec(function(error, req) {
       if (error) {
         response.status(404).json({
           data: null,
           error: new Error("Sorry, couldn't update that requisition."),
         });
       } else {
-        response.status(204).json({ data: req, error: null });
+        response.status(200).send(JSON.stringify({ data: req, error: null }));
       }
-    }
-  );
+    });
 };

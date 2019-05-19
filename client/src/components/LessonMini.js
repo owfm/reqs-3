@@ -29,7 +29,7 @@ const LessonMini = ({ lesson }) => {
     <Card
       onClick={() => createNewReqFromLesson(lesson)}
       header={lesson.classgroup}
-      meta={`${lesson.room}`}
+      meta={`${lesson.room} ${lesson.week + lesson.day + lesson.period}`}
     />
   );
 };

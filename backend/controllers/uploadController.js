@@ -8,13 +8,6 @@ const Lesson = require("../models/lesson");
 exports.timetable = async (request, response) => {
   const fileRows = [];
 
-  // if (!request.file.path) {
-  //   response
-  //     .status(400)
-  //     .send({ data: null, err: new Error("No file supplied.") });
-  // }
-
-  // open uploaded file
   csv
     .fromPath(request.file.path)
     .on("data", function(data) {
@@ -31,6 +24,8 @@ exports.timetable = async (request, response) => {
           school: schoolId,
         };
       });
+
+      const response = Lesson.insertMany(lessons);
 
       lessons.forEach(async function(item) {
         let lesson = new Lesson(item);

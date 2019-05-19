@@ -1,4 +1,6 @@
 import * as actions from "actions/types";
+import * as schemas from "schemas";
+import { normalize } from "normalizr";
 import { handleErrors } from "actions/utils";
 import emitSnackbarWithTimeout from "./snackbar";
 
@@ -31,8 +33,7 @@ export function fetchLessons() {
         return response.json();
       })
       .then(json => {
-        dispatch(fetchLessonsSuccess(json.data));
-
+        dispatch(fetchLessonsSuccess(normalize(json.data, [schemas.lesson])));
         return json.data;
       })
       .catch(error => {

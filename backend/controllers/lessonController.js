@@ -1,22 +1,25 @@
 var Lesson = require("../models/lesson");
 
 exports.getAllLessons = (request, response) => {
-  Lesson.find({}).exec(function(error, lessons) {
-    if (error) {
-      response.status(500);
-      response.json({
-        data: null,
-        error: new Error("Sorry, something wen't wrong fetching lessons."),
-      });
-    } else {
-      response.json({ data: lessons, error: null });
-    }
-  });
+  Lesson.find({})
+    .populate({ path: "teacher" })
+    .populate({ path: "school" })
+    .exec(function(error, lessons) {
+      if (error) {
+        response.status(500);
+        response.json({
+          data: null,
+          error: new Error("Sorry, something wen't wrong fetching lessons."),
+        });
+      } else {
+        response.json({ data: lessons, error: null });
+      }
+    });
 };
 exports.getSingleLesson = (request, response) => {
   Lesson.find({ _id: request.params.id })
-    .populate("teacher", "email role")
-    .populate("school", "name")
+    .populate("teacher")
+    .populate("school")
     .exec(function(error, lesson) {
       if (error) {
         response.status(404).json({

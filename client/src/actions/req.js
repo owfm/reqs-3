@@ -1,6 +1,8 @@
 import * as actions from "actions/types";
 import { handleErrors } from "actions/utils";
 import emitSnackbarWithTimeout from "./snackbar";
+import * as schemas from "schemas";
+import { normalize } from "normalizr";
 
 const requestDeleteReq = id => {
   return {
@@ -70,17 +72,16 @@ export function submitReq(requisition) {
       .then(handleErrors)
       .then(response => response.json())
       .then(json => {
-        dispatch(submitReqSuccess(json.data));
+        dispatch(submitReqSuccess(normalize(json.data, schemas.reqs)));
         return json.data;
       })
       .catch(error => dispatch(submitReqFailure(new Error(error.message))));
   };
 }
 
-const requestUpdateReq = payload => {
+const requestUpdateReq = () => {
   return {
     type: actions.UPDATE_REQ_REQUEST,
-    payload,
   };
 };
 
@@ -100,7 +101,11 @@ const updateReqFailure = payload => {
 
 export function updateReq(requisition) {
   return dispatch => {
-    dispatch(requestUpdateReq(requisition));
+    dispatch(requestUpdateReq());
+    // if (isBlank(requisition)) {
+    //   dispatch(deleteReq(requisition._id));
+    //   throw new Error("Empty requisition: deleted.");
+    // }
     return fetch(`/reqs/${requisition._id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -111,7 +116,7 @@ export function updateReq(requisition) {
         return response.json();
       })
       .then(json => {
-        dispatch(updateReqSuccess(json.data));
+        dispatch(updateReqSuccess(normalize(json.data, schemas.reqs)));
         return json.data;
       })
       .catch(error => dispatch(updateReqFailure(error)));
@@ -149,7 +154,7 @@ export function fetchSingleReq(id) {
       .then(handleErrors)
       .then(response => response.json())
       .then(json => {
-        dispatch(fetchReqSuccess(json));
+        dispatch(fetchReqSuccess(normalize(json.data, schemas.reqs)));
         return json;
       })
       .catch(error => dispatch(fetchReqFailure(error)));
@@ -181,8 +186,8 @@ export function restoreDeletedReq() {
     dispatch(restoreDeletedReqRequest);
     const { deleted } = getState().reqs;
     if (deleted) {
-      const submitted = await dispatch(submitReq(deleted));
-      if (submitted) {
+      const response = await dispatch(submitReq(deleted));
+      if (response.ok) {
         dispatch(restoreDeletedReqSuccess());
         dispatch(emitSnackbarWithTimeout("Requisition restored."));
       }
@@ -191,3 +196,11 @@ export function restoreDeletedReq() {
     }
   };
 }
+
+const isBlank = requisition => {
+  const { title, equipment, notes } = requisition;
+  if (!title && !equipment && !notes) {
+    return true;
+  }
+  return false;
+};

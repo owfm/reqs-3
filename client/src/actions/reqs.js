@@ -1,5 +1,7 @@
 import * as actions from "actions/types";
+import * as schemas from "schemas";
 import { handleErrors } from "actions/utils";
+import { normalize } from "normalizr";
 
 const fetchReqsRequest = () => {
   return {
@@ -28,8 +30,7 @@ export function fetchReqs() {
       .then(handleErrors)
       .then(response => response.json())
       .then(json => {
-        dispatch(fetchReqsSuccess(json.data));
-        return json.data;
+        dispatch(fetchReqsSuccess(normalize(json.data, [schemas.reqs])));
       })
       .catch(error => {
         fetchReqsFailure(error);

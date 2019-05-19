@@ -63,7 +63,6 @@ exports.patchSchool = (request, response) => {
     { new: true },
     function(err, req) {
       if (err) {
-        console.log(err);
       } else {
         response.send(JSON.stringify({ data: req }));
       }

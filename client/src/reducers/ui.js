@@ -1,11 +1,18 @@
 import * as actions from "actions/types";
 
 const initialState = {
+  currentTimetableWeek: 1,
+  fetching: false,
   progressBarOpen: false,
 };
 
 export default function(state = initialState, action) {
   switch (action.type) {
+    case "TOGGLE_WEEK":
+      return {
+        ...state,
+        currentTimetableWeek: 3 - state.currentTimetableWeek,
+      };
     case actions.SET_PROGRESS_BAR:
       return {
         ...state,
