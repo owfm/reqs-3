@@ -6,14 +6,14 @@ import { normalize } from "normalizr";
 
 const requestDeleteReq = id => {
   return {
-    type: actions.DELETE_REQ_REQUEST,
+    type: "DELETE_REQS_REQUEST",
     payload: id,
   };
 };
 
 const deleteReqFailure = error => {
   return {
-    type: actions.DELETE_REQ_FAILURE,
+    type: "DELETE_REQS_FAILURE",
     payload: error,
     error: true,
   };
@@ -21,7 +21,7 @@ const deleteReqFailure = error => {
 
 const deleteReqsSuccess = id => {
   return {
-    type: actions.DELETE_REQ_SUCCESS,
+    type: "DELETE_REQS_SUCCESS",
     payload: id,
   };
 };
@@ -40,31 +40,31 @@ export const deleteReq = id => {
   };
 };
 
-const submitReqRequest = payload => {
+const createReqRequest = payload => {
   return {
-    type: actions.SUBMIT_REQ_REQUEST,
+    type: "CREATE_REQS_REQUEST",
     payload,
   };
 };
 
-const submitReqSuccess = payload => {
+const createReqSuccess = payload => {
   return {
-    type: actions.SUBMIT_REQ_SUCCESS,
+    type: "CREATE_REQS_SUCCESS",
     payload,
   };
 };
 
-const submitReqFailure = payload => {
+const createReqFailure = payload => {
   return {
-    type: actions.SUBMIT_REQ_FAILURE,
+    type: "CREATE_REQS_FAILURE",
     payload,
   };
 };
-export function submitReq(requisition) {
-  return async dispatch => {
-    dispatch(submitReqRequest(requisition));
 
-    return await fetch("/reqs", {
+export function createSingleReq(requisition) {
+  return dispatch => {
+    dispatch(createReqRequest());
+    return fetch("/reqs", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requisition),
@@ -72,40 +72,40 @@ export function submitReq(requisition) {
       .then(handleErrors)
       .then(response => response.json())
       .then(json => {
-        dispatch(submitReqSuccess(normalize(json.data, schemas.reqs)));
+        dispatch(createReqSuccess(normalize(json.data, schemas.reqs)));
         return json.data;
       })
-      .catch(error => dispatch(submitReqFailure(new Error(error.message))));
+      .catch(error => {
+        dispatch(createReqFailure(new Error("Could not create new req.")));
+        throw error;
+      });
   };
 }
 
-const requestUpdateReq = () => {
+const updateReqsRequest = payload => {
   return {
-    type: actions.UPDATE_REQ_REQUEST,
-  };
-};
-
-const updateReqSuccess = payload => {
-  return {
-    type: actions.UPDATE_REQ_SUCCESS,
+    type: "UPDATE_REQS_REQUEST",
     payload,
   };
 };
 
-const updateReqFailure = payload => {
+const updateReqsSuccess = payload => {
   return {
-    type: actions.UPDATE_REQ_FAILURE,
+    type: "UPDATE_REQS_SUCCESS",
+    payload,
+  };
+};
+
+const updateReqsFailure = payload => {
+  return {
+    type: "UPDATE_REQS_FAILURE",
     payload,
   };
 };
 
 export function updateReq(requisition) {
   return dispatch => {
-    dispatch(requestUpdateReq());
-    // if (isBlank(requisition)) {
-    //   dispatch(deleteReq(requisition._id));
-    //   throw new Error("Empty requisition: deleted.");
-    // }
+    dispatch(updateReqsRequest(requisition._id));
     return fetch(`/reqs/${requisition._id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -116,10 +116,10 @@ export function updateReq(requisition) {
         return response.json();
       })
       .then(json => {
-        dispatch(updateReqSuccess(normalize(json.data, schemas.reqs)));
+        dispatch(updateReqsSuccess(normalize(json.data, schemas.reqs)));
         return json.data;
       })
-      .catch(error => dispatch(updateReqFailure(error)));
+      .catch(error => dispatch(updateReqsFailure(error)));
   };
 }
 
@@ -186,7 +186,7 @@ export function restoreDeletedReq() {
     dispatch(restoreDeletedReqRequest);
     const { deleted } = getState().reqs;
     if (deleted) {
-      const response = await dispatch(submitReq(deleted));
+      const response = await dispatch(deleted);
       if (response.ok) {
         dispatch(restoreDeletedReqSuccess());
         dispatch(emitSnackbarWithTimeout("Requisition restored."));
@@ -196,11 +196,3 @@ export function restoreDeletedReq() {
     }
   };
 }
-
-const isBlank = requisition => {
-  const { title, equipment, notes } = requisition;
-  if (!title && !equipment && !notes) {
-    return true;
-  }
-  return false;
-};

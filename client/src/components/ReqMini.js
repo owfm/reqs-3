@@ -1,35 +1,37 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
+import history from "history/history";
+import getIsFetching from "reducers";
 
 import emitSnackbar from "actions/snackbar";
 
-const ReqMini = ({ requisition, lesson }) => {
-  const [redirect, setRedirect] = useState({ go: false, url: null });
+import SessionItem from "components/styles/SessionItem";
 
-  if (redirect.go) {
-    return <Redirect to={redirect.url} />;
-  }
-
-  if (!lesson) return <p>Loading...</p>;
+const ReqMini = ({ req, lesson }) => {
+  if (!req || !lesson) return <p>Help me</p>;
 
   const getReqUrl = () => {
-    return `/reqs/${requisition._id}`;
+    return `/reqs/${req._id}`;
   };
 
   return (
-    <Card
-      onClick={() => setRedirect({ go: true, url: getReqUrl() })}
-      header={`${requisition.title} with ${lesson.classgroup}`}
-      meta={`${lesson.room}`}
-    />
+    <SessionItem day={lesson.day} period={lesson.period}>
+      <Card
+        onClick={() => history.push(getReqUrl())}
+        header={`${req.title} with ${lesson.classgroup}`}
+        meta={`${lesson.room}`}
+      />
+    </SessionItem>
   );
 };
 
 const mapStateToProps = (state, ownProps) => {
+  const req = state.entitiesById.reqs[ownProps.reqId];
   return {
-    lesson: state.lessons.byId[ownProps.requisition.lesson],
+    req,
+    lesson: state.entitiesById.lessons[req.lesson],
+    loading: getIsFetching(state, "reqs"),
   };
 };
 

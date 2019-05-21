@@ -1,3 +1,21 @@
+const operations = ["fetch", "create", "update", "delete"];
+const entities = ["reqs", "lessons"];
+const statuses = ["request, success, failure"];
+
+export const actionTypeCreator = (operation, entity, status) => {
+  if (
+    !operations.includes(operation) ||
+    !entities.includes(entity) ||
+    !statuses.includes(status)
+  ) {
+    throw new Error();
+  }
+  console.log(
+    `${operation.toUpperCase()}_${entity.toUpperCase()}_${status.toUpperCase()}`
+  );
+  return `${operation.toUpperCase()}_${entity.toUpperCase()}_${status.toUpperCase()}`;
+};
+
 export const EMIT_SNACKBAR = "EMIT_SNACKBAR";
 export const CLOSE_SNACKBAR = "CLOSE_SNACKBAR";
 

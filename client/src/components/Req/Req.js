@@ -3,9 +3,11 @@ import { connect } from "react-redux";
 import { deleteReq, updateReq, fetchSingleReq } from "actions/req";
 import emitSnackbar from "actions/snackbar";
 import ReqPresentation from "./ReqPresentation";
+import { getErrorMessage, getIsFetching } from "../../reducers";
 
 const Req = ({
   error,
+  reqFromStore,
   fetchReq,
   deleteReq,
   updateReq,
@@ -17,10 +19,12 @@ const Req = ({
   const [requisition, setRequisition] = useState();
 
   useEffect(() => {
-    (async id => {
-      const response = await fetchReq(id);
-      setRequisition(response.data);
-    })(match.params.id);
+    if (reqFromStore) {
+      (async id => {
+        const response = await fetchReq(id);
+        setRequisition(response.data);
+      })(match.params.id);
+    }
   }, []);
 
   const handleChange = function(e) {
@@ -89,12 +93,12 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-function mapStateToProps(state) {
-  const { loading, error } = state.reqs;
-
+function mapStateToProps(state, ownProps) {
+  const { id = null } = ownProps.match.params;
   return {
-    loading,
-    error,
+    reqFromStore: state.entitiesById.reqs[id],
+    fetching: getIsFetching(state, "reqs"),
+    error: getErrorMessage(state, "reqs"),
   };
 }
 

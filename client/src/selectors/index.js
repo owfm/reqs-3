@@ -2,52 +2,44 @@ import { createSelector } from "reselect";
 import pickby from "lodash.pickby";
 
 // TODO get current week from store and filter lessons
-const getLessonsForCurrentWeek = state => {
-  if (state.lessons.byId.length === 0) {
-    return {};
-  }
 
-  return pickby(
-    state.lessons.byId,
-    (value, key) => value.week === state.ui.currentTimetableWeek
-  );
+const getCurrentWeek = state => {
+  return state.ui.currentTimetableWeek;
 };
-const getReqsForCurrentWeek = state => {
-  if (state.reqs.byId.length === 0) {
-    return {};
-  }
 
-  return pickby(state.reqs.byId, (value, key) => {
-    // throws error if not properly formatted lesson, wrap in try-catch.
-    try {
-      return (
-        state.lessons.byId[value.lesson].week === state.ui.currentTimetableWeek
-      );
-    } catch {
-      return false;
-    }
-  });
+const getLessons = state => {
+  return state.entitiesById.lessons;
 };
-export const getSessionsForCurrentWeek = createSelector(
-  [getLessonsForCurrentWeek, getReqsForCurrentWeek],
-  (lessons, reqs) => {
-    // get list of _ids of lessons with visible reqs assigned.
-    let lessonIdsOfVisibleReqs = Object.values(reqs).map(req => req.lesson);
 
-    return [
-      pickby(lessons, (value, key) => !lessonIdsOfVisibleReqs.includes(key)),
-      reqs,
-    ];
+const getReqs = state => {
+  return state.entitiesById.reqs;
+};
+
+const getLessonsForCurrentWeek = createSelector(
+  [getCurrentWeek, getLessons],
+  (currentWeek, lessons) => {
+    return pickby(lessons, (value, key) => value.week === currentWeek);
   }
 );
 
-export const getLessonIdToDayPeriodMap = state => {
-  let map = {};
-  Object.keys(state.lessons.byId).map(lessonId => {
-    map[lessonId] = {
-      day: state.lessons.byId[lessonId].day,
-      period: state.lessons.byId[lessonId].period,
-    };
-  });
-  return map;
-};
+const getReqsForCurrentWeek = createSelector(
+  [getCurrentWeek, getReqs, getLessons],
+  (currentWeek, reqs, lessons) => {
+    return pickby(reqs, (value, key) => {
+      return lessons[value.lesson].week === currentWeek;
+    });
+  }
+);
+export const getSessionIdsForCurrentWeek = createSelector(
+  [getLessonsForCurrentWeek, getReqsForCurrentWeek],
+  (lessons, reqs) => {
+    let lessonIdsOfVisibleReqs = Object.values(reqs).map(req => req.lesson);
+
+    return [
+      Object.keys(lessons).filter(
+        lessonId => !lessonIdsOfVisibleReqs.includes(lessonId)
+      ),
+      Object.keys(reqs),
+    ];
+  }
+);

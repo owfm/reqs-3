@@ -67,6 +67,16 @@ exports.deleteSingleReq = (request, response) => {
   });
 };
 
+exports.deleteAllReqs = (request, response) => {
+  Req.deleteMany({}, function(error) {
+    if (error) {
+      response.status(400).json({ data: null, error });
+    } else {
+      response.status(204).json({ data: null, error: null });
+    }
+  });
+};
+
 exports.patchReq = (request, response) => {
   Req.findByIdAndUpdate(
     request.params.id,

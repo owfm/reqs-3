@@ -1,16 +1,34 @@
 import { combineReducers } from "redux";
 import { reducer as formReducer } from "redux-form";
 import snackbar from "reducers/snackbar";
-import reqs from "reducers/reqs";
-import lessons from "reducers/lessons";
 import ui from "reducers/ui";
 import auth from "reducers/auth";
+import createList, * as fromList from "./createList";
+import createById from "./createById";
+
+const listByEntity = combineReducers({
+  reqs: createList("reqs"),
+  lessons: createList("lessons"),
+});
+
+const entitiesById = combineReducers({
+  reqs: createById("reqs"),
+  lessons: createById("lessons"),
+});
 
 export default combineReducers({
+  listByEntity,
+  entitiesById,
   auth,
   snackbar,
-  reqs,
   ui,
-  lessons,
   form: formReducer,
 });
+
+const getErrorMessage = (state, entity) =>
+  fromList.getErrorMessage(state.listByEntity[entity]);
+
+const getIsFetching = (state, entity) =>
+  fromList.getIsFetching(state.listByEntity[entity]);
+
+export { getErrorMessage, getIsFetching };

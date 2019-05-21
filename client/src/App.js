@@ -10,7 +10,6 @@ import Welcome from "components/Welcome";
 import Signup from "components/auth/Signup";
 import Signout from "components/auth/Signout";
 import Signin from "components/auth/Signin";
-import Reqs from "components/Reqs/Reqs";
 import Lessons from "components/Lessons";
 import Header from "components/Header";
 import LoadingBar from "components/LoadingBar";
@@ -42,7 +41,6 @@ function App() {
                 <Route path="/signin" component={Signin} />
                 <Route path="/about" component={About} />
                 <Route path="/newschool" component={CreateSchool} />
-                <Route exact path={`/reqs/`} component={Reqs} />
                 <Route path={`/reqs/:id`} component={Req} />
                 <Route exact path={`/lessons/`} component={Lessons} />
                 <Route component={NotFound} />

@@ -1,46 +1,51 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
-
+import history from "history/history";
 import emitSnackbar from "actions/snackbar";
+import { createSingleReq } from "actions/req";
 
-const LessonMini = ({ lesson }) => {
-  const [redirect, setRedirect] = useState({ go: false, url: null });
-  const createNewReqFromLesson = lesson => {
-    return fetch("/reqs", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ lesson: lesson._id }),
-    })
-      .then(response => response.json())
-      .then(json => {
-        emitSnackbar(`New req created with id ${json.data._id}`);
-        setRedirect({ go: true, url: `/reqs/${json.data._id}` });
-      })
-      .catch(error => emitSnackbar(`Something went wrong! ${error.message}`));
+import SessionItem from "components/styles/SessionItem";
+
+const LessonMini = ({ lesson, createNewReqFromLessonId }) => {
+  const createReq = async () => {
+    try {
+      const requisition = await createNewReqFromLessonId(lesson._id);
+      emitSnackbar("New requisition created!");
+      history.push(`/reqs/${requisition._id}`);
+    } catch (error) {
+      console.error(error);
+      emitSnackbar("Sorry, something went wrong.");
+      history.push("/");
+    }
   };
-
-  if (redirect.go) {
-    return <Redirect to={redirect.url} />;
-  }
-
   return (
-    <Card
-      onClick={() => createNewReqFromLesson(lesson)}
-      header={lesson.classgroup}
-      meta={`${lesson.room} ${lesson.week + lesson.day + lesson.period}`}
-    />
+    <SessionItem day={lesson.day} period={lesson.period}>
+      <Card
+        onClick={() => createReq()}
+        header={lesson.classgroup}
+        meta={`${lesson.room} ${lesson.week + lesson.day + lesson.period}`}
+      />
+    </SessionItem>
   );
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     emitSnackbar: message => dispatch(emitSnackbar(message)),
+    createNewReqFromLessonId: lessonId =>
+      dispatch(createSingleReq({ lesson: lessonId })),
+  };
+};
+
+const mapStateToProps = (state, ownProps) => {
+  const { lessonId } = ownProps;
+  return {
+    lesson: state.entitiesById.lessons[lessonId],
   };
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(LessonMini);
