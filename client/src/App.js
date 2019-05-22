@@ -4,7 +4,6 @@ import { Provider } from "react-redux";
 import store from "store";
 import history from "history/history";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import TopBar from "components/TopBar";
 import Welcome from "components/Welcome";
 import Signup from "components/auth/Signup";
@@ -17,6 +16,9 @@ import Req from "components/Req/Req";
 import Snackbar from "components/Snackbar";
 import CreateSchool from "components/CreateSchool";
 
+import { createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
+
 import UserSelector from "components/userSelector";
 
 const theme = createMuiTheme({
@@ -24,13 +26,14 @@ const theme = createMuiTheme({
     useNextVariants: true,
   },
 });
+
 function App() {
   return (
     <Provider store={store}>
       <Router history={history}>
         <>
           <CssBaseline>
-            <MuiThemeProvider theme={theme}>
+            <ThemeProvider theme={theme}>
               <LoadingBar />
               <TopBar />
               <Header />
@@ -47,7 +50,7 @@ function App() {
               </Switch>
               <Snackbar />
               <UserSelector />
-            </MuiThemeProvider>
+            </ThemeProvider>
           </CssBaseline>
         </>
       </Router>

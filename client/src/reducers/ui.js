@@ -1,18 +1,37 @@
+import { combineReducers } from "redux";
 import * as actions from "actions/types";
-
+import { addWeeks } from "date-fns";
+import eachDay from "date-fns/each_day";
+import startOfWeek from "date-fns/start_of_week";
+import lastDayOfWeek from "date-fns/last_day_of_week";
 const initialState = {
   currentTimetableWeek: 1,
   fetching: false,
   progressBarOpen: false,
 };
 
-export default function(state = initialState, action) {
+const currentDate = (state = null, action) => {
+  switch (action.type) {
+    case actions.SET_CURRENT_DATE:
+      return action.payload;
+    case actions.JUMP_WEEKS:
+      return addWeeks(state, action.payload);
+    default:
+      return state;
+  }
+};
+
+const currentTimetableWeek = (state = 1, action) => {
   switch (action.type) {
     case "TOGGLE_WEEK":
-      return {
-        ...state,
-        currentTimetableWeek: 3 - state.currentTimetableWeek,
-      };
+      return 3 - state;
+    default:
+      return state;
+  }
+};
+
+const progressBar = (state = initialState, action) => {
+  switch (action.type) {
     case actions.SET_PROGRESS_BAR:
       return {
         ...state,
@@ -44,4 +63,16 @@ export default function(state = initialState, action) {
     default:
       return state;
   }
-}
+};
+
+export default combineReducers({
+  currentDate,
+  currentTimetableWeek,
+  progressBar,
+});
+
+export const getDatesOfCurrentIsoWeek = state => {
+  if (!state.ui.currentDate) return null;
+  const currentDateObj = new Date(state.ui.currentDate);
+  return eachDay(startOfWeek(currentDateObj), lastDayOfWeek(currentDateObj));
+};

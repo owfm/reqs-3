@@ -56,3 +56,6 @@ export const SET_PROGRESS_BAR = "SET_PROGRESS_BAR";
 
 export const AUTH_USER = "auth_user";
 export const AUTH_ERROR = "auth_error";
+
+export const SET_CURRENT_DATE = "SET_CURRENT_DATE";
+export const JUMP_WEEKS = "JUMP_WEEKS";

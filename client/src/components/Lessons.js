@@ -8,6 +8,9 @@ import ReqMini from "components/ReqMini";
 import { fetchReqs } from "actions/reqs";
 import { getSessionIdsForCurrentWeek } from "selectors";
 import { getErrorMessage, getIsFetching } from "reducers";
+import DatePicker from "components/datePicker";
+import PeriodRow from "components/PeriodRow";
+import DayHeader from "components/DayHeader";
 
 export const MainGrid = styled.div`
   padding: 20px;
@@ -15,11 +18,6 @@ export const MainGrid = styled.div`
   grid-template-rows: auto repeat(${props => props.periods.length + 1}, auto);
   grid-gap: 10px;
   grid-template-columns: auto repeat(5, 1fr);
-`;
-
-const PeriodLabel = styled.div`
-  grid-column-start: 1;
-  grid-row-start: ${props => parseInt(props.period) + 1};
 `;
 
 export const SessionGrid = styled.div`
@@ -47,27 +45,12 @@ const Lessons = ({
     }
   }, []);
 
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-  const periods = ["1", "2", "3", "4", "5", "6"];
-
-  const dayHeaders = days.map(day => (
-    <div style={{ justifySelf: "center", fontWeight: "bold" }} key={`d${day}`}>
-      {day}
-    </div>
-  ));
-
   const LessonSessions = lessonIds.map(lessonId => (
     <LessonMini key={lessonId} lessonId={lessonId} />
   ));
 
   const ReqSessions = reqIds.map(reqId => (
     <ReqMini key={reqId} reqId={reqId} />
-  ));
-
-  const periodRow = periods.map(period => (
-    <PeriodLabel key={period} period={period}>
-      {period}
-    </PeriodLabel>
   ));
 
   if (fetchingReqs || fetchingLessons) {
@@ -92,10 +75,11 @@ const Lessons = ({
       <button onClick={() => dispatch({ type: "TOGGLE_WEEK" })}>
         {`Currently week ${currentWeek}. Click to toggle.`}
       </button>
+      <DatePicker />
       <MainGrid periods={6}>
         <div />
-        {periodRow}
-        {dayHeaders}
+        <PeriodRow />
+        <DayHeader />
         {ReqSessions}
         {LessonSessions}{" "}
       </MainGrid>
