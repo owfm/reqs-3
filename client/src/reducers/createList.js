@@ -6,7 +6,9 @@ const createList = entity => {
       case `FETCH_${entity.toUpperCase()}_SUCCESS`:
       case `CREATE_${entity.toUpperCase()}_SUCCESS`:
         return action.payload.result
-          ? [...state, ...action.payload.result]
+          ? Array.isArray(action.payload.result)
+            ? [...state, ...action.payload.result]
+            : [...state, action.payload.result]
           : state;
       case `DELETE_${entity.toUpperCase()}_SUCCESS`:
         return [...state.filter(id => id !== action.payload)];

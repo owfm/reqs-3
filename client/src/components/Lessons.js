@@ -30,6 +30,7 @@ export const SessionGrid = styled.div`
 
 const Lessons = ({
   dispatch,
+  skippedIds,
   lessonIds = [],
   reqIds = [],
   fetchingLessons,
@@ -52,6 +53,12 @@ const Lessons = ({
     <LessonMini key={lessonId} lessonId={lessonId} />
   ));
 
+  console.log("component lessonIds:\n");
+  console.log(lessonIds);
+
+  console.log("Skipped Ids:\n");
+  console.log(skippedIds);
+
   const ReqSessions = reqIds.map(reqId => (
     <ReqMini key={reqId} reqId={reqId} />
   ));
@@ -60,9 +67,9 @@ const Lessons = ({
     return <p>Loading...</p>;
   }
 
-  if (lessonIds.length === 0) {
-    return <p>You don't have any timetabled lessons.</p>;
-  }
+  // if (lessonIds.length === 0) {
+  //   return <p>You don't have any timetabled lessons.</p>;
+  // }
 
   return (
     <>
@@ -91,10 +98,19 @@ const Lessons = ({
 };
 
 const mapStateToProps = state => {
-  const [lessonIds, reqIds] = getSessionIdsForCurrentWeek(state);
+  const [skippedIds, lessonIds, reqIds] = getSessionIdsForCurrentWeek(state);
+
+  console.log("MSTP lessonIds:\n");
+  console.log(lessonIds);
 
   return {
+    skippedIds,
+    // lessonIds: [],
     lessonIds,
+    // lessonIds: lessonIds.filter(
+    //   lessonId => !lessonIdsOfVisibleReqs.includes(lessonId)
+    // ),
+    // lessonIds,
     reqIds,
     currentWeek: state.ui.currentTimetableWeek,
     lessonError: getErrorMessage(state, "lessons"),

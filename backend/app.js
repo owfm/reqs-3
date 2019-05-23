@@ -8,11 +8,16 @@ const cors = require("cors");
 const requireAuth = require("./routes/auth");
 
 // set up DB
-const { MONGO_PASS } = process.env;
-mongoose.connect(
-  `mongodb+srv://reqs-admin:${MONGO_PASS}@reqs-cluster-0-k8nns.mongodb.net/test?retryWrites=true`,
-  { useNewUrlParser: true }
-);
+mongoose.connect(`mongodb://localhost:27017/reqs-db`);
+// const { MONGO_PASS } = process.env;
+// try {
+//   mongoose.connect(
+//     `mongodb+srv://reqs-admin:${MONGO_PASS}@reqs-cluster-0-k8nns.mongodb.net/test?retryWrites=true`,
+//     { useNewUrlParser: true }
+//   );
+// } catch (error) {
+//   next(error);
+// }
 
 app.use(morgan("combined"));
 app.use(cors());

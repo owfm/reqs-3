@@ -13,7 +13,7 @@ exports.timetable = async (request, response) => {
     .on("data", function(data) {
       fileRows.push(data); // push each row
     })
-    .on("end", function() {
+    .on("end", async function() {
       fs.unlinkSync(request.file.path); // remove temp file
       let lessons = getLessonsFromCsv(fileRows);
 
@@ -24,17 +24,11 @@ exports.timetable = async (request, response) => {
           school: schoolId,
         };
       });
-
-      const response = Lesson.insertMany(lessons);
-
-      lessons.forEach(async function(item) {
-        let lesson = new Lesson(item);
-        try {
-          await lesson.save();
-        } catch (err) {
-          throw new Error();
-        }
-      });
+      try {
+        await Lesson.insertMany(lessons);
+      } catch (error) {
+        next(error);
+      }
 
       Lesson.find(function(err, lessons) {
         if (err) {
