@@ -76,3 +76,15 @@ export const getDatesOfCurrentIsoWeek = state => {
   const currentDateObj = new Date(state.ui.currentDate);
   return eachDay(startOfWeek(currentDateObj), lastDayOfWeek(currentDateObj));
 };
+
+// this function takes a weekday name and returns the index appropriate date from the array returned by getDatesOfCurrentIsoWeek
+export const getWeekdayIndexOfNamedWeekday = weekday => {
+  const map = {
+    Mon: 2,
+    Tue: 3,
+    Wed: 4,
+    Thu: 5,
+    Fri: 6,
+  };
+  return map[weekday];
+};

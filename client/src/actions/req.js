@@ -3,6 +3,10 @@ import { handleErrors } from "actions/utils";
 import emitSnackbarWithTimeout from "./snackbar";
 import * as schemas from "schemas";
 import { normalize } from "normalizr";
+import {
+  getDatesOfCurrentIsoWeek,
+  getWeekdayIndexOfNamedWeekday,
+} from "reducers/ui";
 
 const requestDeleteReq = id => {
   return {
@@ -62,12 +66,22 @@ const createReqFailure = payload => {
 };
 
 export function createSingleReq(requisition) {
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch(createReqRequest());
+
+    // get date of current req
+    const datesOfCurrentWeek = getDatesOfCurrentIsoWeek(getState());
+
+    // get lesson this requisition being called with
+    const lesson = getState().entitiesById.lessons[requisition.lesson];
+    const date = datesOfCurrentWeek[getWeekdayIndexOfNamedWeekday(lesson.day)];
+
+    // MAYBE BETTER: HAVE COMPONENT CALLING CREATESINGLEREQ ASSIGN DATE?
+
     return fetch("/reqs", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requisition),
+      body: JSON.stringify({ ...requisition, date }),
     })
       .then(handleErrors)
       .then(response => response.json())
@@ -158,6 +172,41 @@ export function fetchSingleReq(id) {
         return json;
       })
       .catch(error => dispatch(fetchReqFailure(error)));
+  };
+}
+
+const fetchReqsRequest = () => {
+  return {
+    type: actions.FETCH_REQS_REQUEST,
+  };
+};
+
+export const fetchReqsFailure = error => {
+  return {
+    type: actions.FETCH_REQS_FAILURE,
+    payload: error,
+  };
+};
+
+const fetchReqsSuccess = reqs => {
+  return {
+    type: actions.FETCH_REQS_SUCCESS,
+    payload: reqs,
+  };
+};
+
+export function fetchReqs() {
+  return dispatch => {
+    dispatch(fetchReqsRequest());
+    return fetch("/reqs")
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(json => {
+        dispatch(fetchReqsSuccess(normalize(json.data, [schemas.reqs])));
+      })
+      .catch(error => {
+        fetchReqsFailure(error);
+      });
   };
 }
 

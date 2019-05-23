@@ -1,14 +1,17 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { fetchLessons } from "actions/lessons";
 import styled from "styled-components";
 import isEmpty from "lodash.isempty";
+
+import { fetchLessons } from "actions/lessons";
+import { fetchReqs } from "actions/req";
+
+import { getErrorMessage, getIsFetching } from "reducers";
+import { getSessionIdsForCurrentWeek } from "selectors";
+
 import LessonMini from "components/LessonMini";
 import ReqMini from "components/ReqMini";
-import { fetchReqs } from "actions/reqs";
-import { getSessionIdsForCurrentWeek } from "selectors";
-import { getErrorMessage, getIsFetching } from "reducers";
-import DatePicker from "components/datePicker";
+import DatePicker from "components/DatePicker";
 import PeriodRow from "components/PeriodRow";
 import DayHeader from "components/DayHeader";
 

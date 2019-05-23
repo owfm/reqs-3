@@ -8,7 +8,7 @@ var ReqSchema = new Schema({
   isDone: { type: Boolean, default: false },
   hasIssue: { type: Boolean, default: false },
   issueText: String,
-  datetime: { type: Date },
+  date: { type: Date },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   title: { type: String, default: "" },

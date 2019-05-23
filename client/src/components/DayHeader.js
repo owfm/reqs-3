@@ -13,7 +13,7 @@ const DayHeader = ({ datesOfCurrentIsoWeek }) => {
       <>
         {day}
         <br />
-        {format(datesOfCurrentIsoWeek[index + 1], "yyyy-MM-dd")}
+        {format(datesOfCurrentIsoWeek[index + 1], "eee dd-MM")}
       </>
     </div>
   ));
