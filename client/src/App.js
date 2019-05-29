@@ -14,26 +14,21 @@ import Header from "components/Header";
 import LoadingBar from "components/LoadingBar";
 import Req from "components/Req/Req";
 import Snackbar from "components/Snackbar";
-import CreateSchool from "components/CreateSchool";
+import CreateSchool from "components/CreateSchool/index";
 
-import { createMuiTheme } from "@material-ui/core/styles";
-import { ThemeProvider } from "@material-ui/styles";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 
 import UserSelector from "components/userSelector";
 
-const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-  },
-});
-
 function App() {
   return (
-    <Provider store={store}>
-      <Router history={history}>
-        <>
-          <CssBaseline>
-            <ThemeProvider theme={theme}>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <Provider store={store}>
+        <Router history={history}>
+          <>
+            <CssBaseline>
+              {/* <ThemeProvider theme={theme}> */}
               <LoadingBar />
               <TopBar />
               <Header />
@@ -50,11 +45,12 @@ function App() {
               </Switch>
               <Snackbar />
               <UserSelector />
-            </ThemeProvider>
-          </CssBaseline>
-        </>
-      </Router>
-    </Provider>
+              {/* </ThemeProvider> */}
+            </CssBaseline>
+          </>
+        </Router>
+      </Provider>
+    </MuiPickersUtilsProvider>
   );
 }
 

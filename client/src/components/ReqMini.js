@@ -9,8 +9,7 @@ import emitSnackbar from "actions/snackbar";
 import SessionItem from "components/styles/SessionItem";
 
 const ReqMini = ({ req, lesson }) => {
-  if (!req || !lesson) return <p>Help me</p>;
-
+  if (!req || !lesson) return null;
   const getReqUrl = () => {
     return `/reqs/${req._id}`;
   };
@@ -28,6 +27,7 @@ const ReqMini = ({ req, lesson }) => {
 
 const mapStateToProps = (state, ownProps) => {
   const req = state.entitiesById.reqs[ownProps.reqId];
+
   return {
     req,
     lesson: state.entitiesById.lessons[req.lesson],

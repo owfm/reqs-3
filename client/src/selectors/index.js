@@ -37,9 +37,6 @@ export const getSessionIdsForCurrentWeek = createSelector(
     let lessonIdsOfVisibleReqs = Object.values(reqs).map(req => req.lesson);
 
     return [
-      Object.keys(lessons).filter(lessonId =>
-        lessonIdsOfVisibleReqs.includes(lessonId)
-      ),
       Object.keys(lessons).filter(
         lessonId => !lessonIdsOfVisibleReqs.includes(lessonId)
       ),

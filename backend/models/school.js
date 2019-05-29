@@ -6,6 +6,7 @@ var SchoolSchema = new Schema(
     name: { type: String, required: true },
     admin: { type: Schema.Types.ObjectId, ref: "User" },
     staff: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    preferences: Schema.Types.Mixed,
     createdAt: { type: Date },
   },
   { strict: "throw" }

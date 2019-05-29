@@ -30,17 +30,19 @@ exports.timetable = async (request, response) => {
         next(error);
       }
 
-      Lesson.find(function(err, lessons) {
-        if (err) {
-          response.status(500).send("fail");
+      // TODO CHECK IF LESSON ALREADY EXISTS, CHECK FOR DUPLICATES
+
+      Lesson.find(function(error, lessons) {
+        if (error) {
+          next(error);
         }
-        response.status(200).send(JSON.stringify(lessons));
+        response.status(200).json(lessons);
       });
     });
 };
 
-const schoolId = "5cd432b946c7d97c6f5c9e45";
-const teacherId = "5cd450445819b885d01f65d4";
+const schoolId = "5ce68bac80e1fe39a5f44256";
+const teacherId = "5ce68beb80e1fe39a5f44257";
 
 const getLessonsFromCsv = fileRows => {
   return fileRows

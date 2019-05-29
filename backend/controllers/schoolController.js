@@ -24,12 +24,11 @@ exports.getSchoolById = (request, response) => {
   });
 };
 
-exports.postNewSchool = (request, response) => {
+exports.postNewSchool = (request, response, next) => {
   var newSchool = new School({ ...request.body, createdAt: Date.now() });
   newSchool.save(function(err, school) {
     if (err) {
-      response.status(400);
-      response.send(JSON.stringify({ data: err }));
+      next(err);
     } else {
       response.send({
         data: school,
@@ -56,13 +55,14 @@ exports.deleteSingleSchool = (request, response) => {
   });
 };
 
-exports.patchSchool = (request, response) => {
+exports.patchSchool = (request, response, next) => {
   School.findByIdAndUpdate(
     request.params.id,
     { ...request.body, updatedAt: Date.now() },
     { new: true },
     function(err, req) {
       if (err) {
+        next(err);
       } else {
         response.send(JSON.stringify({ data: req }));
       }
