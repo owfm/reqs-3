@@ -55,17 +55,26 @@ exports.deleteSingleSchool = (request, response) => {
   });
 };
 
+exports.deleteAllSchools = (request, response, next) => {
+  School.deleteMany({}, error => {
+    if (error) {
+      next(error);
+    }
+    response.status(204).end();
+  });
+};
+
 exports.patchSchool = (request, response, next) => {
+  // TODO HANDLE ADDING USERS TO 'STAFF' ARRAY ON USER CREATION
   School.findByIdAndUpdate(
     request.params.id,
     { ...request.body, updatedAt: Date.now() },
     { new: true },
-    function(err, req) {
-      if (err) {
-        next(err);
-      } else {
-        response.send(JSON.stringify({ data: req }));
+    function(error, school) {
+      if (error) {
+        next(new Error("Couldn't update school."));
       }
+      response.status(201).json({ data: school, error: null });
     }
   );
 };

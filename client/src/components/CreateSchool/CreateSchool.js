@@ -1,83 +1,121 @@
 import React, { useState } from "react";
-import { Input, Form, Button, Icon, Divider } from "semantic-ui-react";
-import emitSnackbar from "actions/snackbar";
+import { Button, Form, Icon } from "semantic-ui-react";
 import history from "history/history";
-import format from "date-fns/format";
+import ChooseTermDates from "./ChooseTermDates";
+import ChooseSchoolName from "./ChooseSchoolName";
+import ChooseTimetableWeeks from "./ChooseTimetableWeeks";
+import ChooseWeekBeginningForTerms from "./ChooseWeekBeginningForTerms";
+import moment from "moment";
 
-import { FormContainer, Label } from "./styles";
+import * as styles from "./styles";
 
-import MultipleDatePicker from "react-multiple-datepicker";
-
-const CreateSchool = ({ auth, dispatch }) => {
-  const [termDates, setTermDates] = useState([]);
-  const [school, setSchool] = useState({ name: "" });
+const CreateSchool = ({ auth, emitSnackbar, createSchool }) => {
+  const [page, setPage] = useState(2);
+  const [termDates, setTermDates] = useState(defaultTermDates);
+  const [timetableWeekTermStart, setTimetableWeekTermStart] = useState(
+    defaultTimetableWeekTermStart
+  );
+  const [school, setSchool] = useState({
+    name: "Nottingham High School",
+    timetableWeeks: 2,
+  });
 
   console.log(termDates);
-
-  const handleDatesSelect = dates => {
-    if (dates.length !== 12) {
-      dispatch(
-        emitSnackbar(
-          "You must select 12 dates—the first and last day of each half term."
-        )
-      );
-      setTermDates([]);
-    }
-    // convert to dates
-    let termDates = dates.map(d => new Date(d));
-    // sort dates
-    termDates = termDates.sort((a, b) => a.getTime() - b.getTime());
-    setTermDates(termDates);
-  };
 
   const handleChange = e => {
     setSchool({ [e.target.name]: e.target.value });
   };
 
-  const save = async event => {
-    event.preventDefault();
+  const handleWeekChange = (e, { value }) => {
+    setSchool({ ...school, timetableWeeks: value });
+  };
+
+  const resetTermDates = () => {
+    setTermDates({});
+  };
+
+  const validateSettings = () => {
+    if (!school.name) return false;
+    if (![1, 2].includes(school.timetableWeeks)) return false;
+    if (termDates.length < 6) return false;
+    return true;
+  };
+
+  const save = async () => {
+    const new_school = {
+      name: school.name,
+      preferences: {
+        timetableWeeks: school.timetableWeeks,
+        termDates,
+        timetableWeekTermStart,
+      },
+    };
     try {
-      const response = await fetch("/school", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(school),
-      });
-      if (response.ok) {
-        const json = response.json();
-        dispatch(emitSnackbar(`School ${json.data.name} created.`));
-        history.push("/lessons");
-      }
-    } catch (err) {}
+      await createSchool(new_school);
+      history.push("lessons");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <>
-      <FormContainer>
-        <Label>Click on all the start and end dates of your terms.</Label>
-        <MultipleDatePicker
-          dates={termDates}
-          onSubmit={dates => handleDatesSelect(dates)}
-        />
-        {
-          <ul>
-            {termDates.map(date => (
-              <li>{format(date, "d-LLL-u")}</li>
-            ))}
-          </ul>
-        }
-
-        <Label for="schoolNameInput">What's the name of your school?</Label>
-        <Input
-          placeholder={"What's your school name?"}
-          name={"name"}
-          onChange={handleChange}
-          value={school.name}
-          fluid
-        />
-      </FormContainer>
-      <Button onClick={() => save()} type="submit" disabled={!school.name}>
-        <Icon link name="paper plane" />
-      </Button>
+      <Form>
+        <styles.FormContainer>
+          {page === 1 && (
+            <>
+              <ChooseSchoolName school={school} onChange={handleChange} />
+              <ChooseTermDates
+                termDates={termDates}
+                setTermDates={setTermDates}
+                reset={resetTermDates}
+              />
+              <ChooseTimetableWeeks
+                school={school}
+                onChange={handleWeekChange}
+              />
+              <Button
+                disabled={!validateSettings()}
+                onClick={() => setPage(2)}
+                floated="right"
+                icon
+                labelPosition="right"
+              >
+                Next
+                <Icon name="right arrow" />
+              </Button>
+            </>
+          )}
+          {page === 2 && (
+            <>
+              <ChooseWeekBeginningForTerms
+                termDates={termDates}
+                onChange={setTimetableWeekTermStart}
+                timetableWeekTermStart={timetableWeekTermStart}
+              />
+              <Button
+                onClick={() => setPage(1)}
+                floated="right"
+                icon
+                labelPosition="right"
+              >
+                Prev
+                <Icon name="left arrow" />
+              </Button>
+              <Button
+                onClick={() => save()}
+                type="submit"
+                disabled={!validateSettings()}
+              >
+                {validateSettings()
+                  ? "Save Changes!"
+                  : "We still need some info..."}
+              </Button>
+            </>
+          )}
+        </styles.FormContainer>
+      </Form>
+      {/* <DisplayTermDates dates={termDates} /> */}
     </>
   );
 };
@@ -85,10 +123,37 @@ const CreateSchool = ({ auth, dispatch }) => {
 export default CreateSchool;
 
 const defaultTermDates = {
-  winter1: { startDate: null, endDate: null },
-  winter2: { startDate: null, endDate: null },
-  spring1: { startDate: null, endDate: null },
-  spring2: { startDate: null, endDate: null },
-  summer1: { startDate: null, endDate: null },
-  summer2: { startDate: null, endDate: null },
+  "Winter Half-Term 1": [
+    moment("2018-09-03T12:00:00"),
+    moment("2018-10-19T12:00:00"),
+  ],
+  "Winter Half-Term 2": [
+    moment("2018-10-29T12:00:00"),
+    moment("2018-12-20T12:00:00"),
+  ],
+  "Spring Half-Term 1": [
+    moment("2019-01-07T12:00:00"),
+    moment("2019-02-15T12:00:00"),
+  ],
+  "Spring Half-Term 2": [
+    moment("2019-02-25T12:00:00"),
+    moment("2019-04-05T12:00:00"),
+  ],
+  "Summer Half-Term 1": [
+    moment("2019-04-23T12:00:00"),
+    moment("2019-05-24T12:00:00"),
+  ],
+  "Summer Half-Term 2": [
+    moment("2019-06-03T12:00:00"),
+    moment("2019-07-19T12:00:00"),
+  ],
+};
+
+const defaultTimetableWeekTermStart = {
+  "Winter Half-Term 1": 1,
+  "Winter Half-Term 2": 2,
+  "Spring Half-Term 1": 2,
+  "Spring Half-Term 2": 2,
+  "Summer Half-Term 1": 2,
+  "Summer Half-Term 2": 1,
 };

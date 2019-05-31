@@ -9,12 +9,15 @@ import Welcome from "components/Welcome";
 import Signup from "components/auth/Signup";
 import Signout from "components/auth/Signout";
 import Signin from "components/auth/Signin";
-import Lessons from "components/Lessons";
+import Lessons from "components/Lessons/Lessons";
 import Header from "components/Header";
 import LoadingBar from "components/LoadingBar";
 import Req from "components/Req/Req";
 import Snackbar from "components/Snackbar";
 import CreateSchool from "components/CreateSchool/index";
+
+import "react-dates/initialize";
+import "react-dates/lib/css/_datepicker.css";
 
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";

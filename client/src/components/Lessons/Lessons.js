@@ -1,51 +1,43 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import styled from "styled-components";
 import isEmpty from "lodash.isempty";
-
+import * as styles from "./styles";
 import { fetchLessons } from "actions/lessons";
 import { fetchReqs } from "actions/req";
+import { fetchSingleSchool } from "actions/schools";
 
 import { getErrorMessage, getIsFetching } from "reducers";
 import { getSessionIdsForCurrentWeek } from "selectors";
 
-import LessonMini from "components/LessonMini";
-import ReqMini from "components/ReqMini";
-import DatePicker from "components/DatePicker";
-import PeriodRow from "components/PeriodRow";
-import DayHeader from "components/DayHeader";
-
-export const MainGrid = styled.div`
-  padding: 20px;
-  display: grid;
-  grid-template-rows: auto repeat(${props => props.periods.length + 1}, auto);
-  grid-gap: 10px;
-  grid-template-columns: auto repeat(5, 1fr);
-`;
-
-export const SessionGrid = styled.div`
-  display: grid;
-  grid-gap: 5px;
-`;
+import LessonMini from "components/Lessons/LessonMini";
+import ReqMini from "components/Lessons/ReqMini";
+import DatePicker from "components/Lessons/DatePicker";
+import PeriodRow from "components/Lessons/PeriodRow";
+import DayHeader from "components/Lessons/DayHeader";
 
 const Lessons = ({
-  dispatch,
   lessonIds = [],
   reqIds = [],
   fetchingLessons,
   fetchingReqs,
-  currentWeek,
+  fetchReqs,
+  fetchLessons,
+  fetchSchool,
 }) => {
   useEffect(() => {
     if (isEmpty(reqIds)) {
-      dispatch(fetchReqs());
+      fetchReqs();
     }
   }, []);
 
   useEffect(() => {
     if (isEmpty(lessonIds)) {
-      dispatch(fetchLessons());
+      fetchLessons();
     }
+  }, []);
+
+  useEffect(() => {
+    fetchSchool("5cf1036d92d4dc378f0a43e6");
   }, []);
 
   const LessonSessions = lessonIds.map(lessonId => (
@@ -64,26 +56,32 @@ const Lessons = ({
     <>
       <button
         onClick={() => {
-          dispatch(fetchLessons());
-          dispatch(fetchReqs());
+          fetchLessons();
+          fetchReqs();
+          fetchSchool("5cf03b50b1de672505fe2592");
         }}
       >
         ReFetch
       </button>
       import
-      <button onClick={() => dispatch({ type: "TOGGLE_WEEK" })}>
-        {`Currently week ${currentWeek}. Click to toggle.`}
-      </button>
       <DatePicker />
-      <MainGrid periods={6}>
+      <styles.MainGrid periods={6}>
         <div />
         <PeriodRow />
         <DayHeader />
         {ReqSessions}
         {LessonSessions}{" "}
-      </MainGrid>
+      </styles.MainGrid>
     </>
   );
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchSchool: id => dispatch(fetchSingleSchool(id)),
+    fetchReqs: () => dispatch(fetchReqs()),
+    fetchLessons: () => dispatch(fetchLessons()),
+  };
 };
 
 const mapStateToProps = state => {
@@ -100,4 +98,7 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Lessons);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Lessons);

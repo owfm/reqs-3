@@ -9,11 +9,13 @@ import createById from "./createById";
 const listByEntity = combineReducers({
   reqs: createList("reqs"),
   lessons: createList("lessons"),
+  schools: createList("schools"),
 });
 
 const entitiesById = combineReducers({
   reqs: createById("reqs"),
   lessons: createById("lessons"),
+  schools: createById("schools"),
 });
 
 export default combineReducers({

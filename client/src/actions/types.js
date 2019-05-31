@@ -10,11 +10,24 @@ export const actionTypeCreator = (operation, entity, status) => {
   ) {
     throw new Error();
   }
-  console.log(
-    `${operation.toUpperCase()}_${entity.toUpperCase()}_${status.toUpperCase()}`
-  );
   return `${operation.toUpperCase()}_${entity.toUpperCase()}_${status.toUpperCase()}`;
 };
+
+export const FETCH_SCHOOLS_REQUEST = "FETCH_SCHOOLS_REQUEST";
+export const FETCH_SCHOOLS_SUCCESS = "FETCH_SCHOOLS_SUCCESS";
+export const FETCH_SCHOOLS_FAILURE = "FETCH_SCHOOLS_FAILURE";
+
+export const UPDATE_SCHOOLS_REQUEST = "UPDATE_SCHOOLS_REQUEST";
+export const UPDATE_SCHOOLS_SUCCESS = "UPDATE_SCHOOLS_SUCCESS";
+export const UPDATE_SCHOOLS_FAILURE = "UPDATE_SCHOOLS_FAILURE";
+
+export const DELETE_SCHOOLS_REQUEST = "DELETE_SCHOOLS_REQUEST";
+export const DELETE_SCHOOLS_SUCCESS = "DELETE_SCHOOLS_SUCCESS";
+export const DELETE_SCHOOLS_FAILURE = "DELETE_SCHOOLS_FAILURE";
+
+export const CREATE_SCHOOLS_REQUEST = "CREATE_SCHOOLS_REQUEST";
+export const CREATE_SCHOOLS_SUCCESS = "CREATE_SCHOOLS_SUCCESS";
+export const CREATE_SCHOOLS_FAILURE = "CREATE_SCHOOLS_FAILURE";
 
 export const EMIT_SNACKBAR = "EMIT_SNACKBAR";
 export const CLOSE_SNACKBAR = "CLOSE_SNACKBAR";

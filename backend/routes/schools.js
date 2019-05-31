@@ -9,5 +9,9 @@ router.get("/", schoolController.getAllSchools);
 router.get("/:id", schoolController.getSchoolById);
 router.post("/", schoolController.postNewSchool);
 router.delete("/:id", schoolController.deleteSingleSchool);
+
+router.delete("/", schoolController.deleteAllSchools);
+router.patch("/:id", schoolController.patchSchool);
+
 router.put("/:id", schoolController.patchSchool);
 module.exports = router;
