@@ -1,29 +1,41 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { deleteReq, updateReq, fetchSingleReq } from "actions/req";
+import { deleteReq, updateReq, fetchReqs } from "actions/req";
+import { closeModal } from "actions/ui";
 import emitSnackbar from "actions/snackbar";
 import ReqPresentation from "./ReqPresentation";
 import { getErrorMessage, getIsFetching } from "../../reducers";
+import { getLessonByReqId, getReqById } from "selectors";
 
 const Req = ({
   error,
-  reqFromStore,
-  fetchReq,
+  req,
+  lesson,
+  fetchReqs,
   deleteReq,
   updateReq,
   emitSnackbar,
   match,
   loading,
+
   history,
+  closeModal,
+  id,
 }) => {
   const [requisition, setRequisition] = useState();
 
+  // TODO: move the handling of currently-editing req to the redux store + action creator/thunks to clean up this component.
+
   useEffect(() => {
-    if (reqFromStore) {
+    if (!req) {
       (async id => {
-        const response = await fetchReq(id);
+        const response = await fetchReqs(id);
         setRequisition(response.data);
       })(match.params.id);
+    }
+
+    if (req) {
+      setRequisition(req);
     }
   }, []);
 
@@ -40,7 +52,7 @@ const Req = ({
     } catch (error) {
       emitSnackbar(`Something went wrong: ${error.message}`);
     }
-    history.push("/lessons");
+    closeModal();
   };
 
   const toggleDone = async () => {
@@ -50,6 +62,7 @@ const Req = ({
       emitSnackbar(
         `Req marked as ${!requisition.isDone ? "done!" : "still to do."}`
       );
+      closeModal();
     } catch (error) {
       emitSnackbar(`Something went wrong: ${error.message}`);
     }
@@ -62,7 +75,7 @@ const Req = ({
     } catch (error) {
       emitSnackbar(error.message);
     }
-    history.push("/lessons");
+    closeModal();
   };
 
   if (!requisition || loading) {
@@ -77,6 +90,7 @@ const Req = ({
     <ReqPresentation
       toggleDone={toggleDone}
       requisition={requisition}
+      lesson={lesson}
       save={save}
       discard={discard}
       handleChange={handleChange}
@@ -86,7 +100,8 @@ const Req = ({
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchReq: id => dispatch(fetchSingleReq(id)),
+    closeModal: () => dispatch(closeModal()),
+    fetchReqs: id => dispatch(fetchReqs(id)),
     updateReq: req => dispatch(updateReq(req)),
     deleteReq: id => dispatch(deleteReq(id)),
     emitSnackbar: message => dispatch(emitSnackbar(message)),
@@ -94,9 +109,10 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps(state, ownProps) {
-  const { id = null } = ownProps.match.params;
+  const { id } = ownProps;
   return {
-    reqFromStore: state.entitiesById.reqs[id],
+    lesson: getLessonByReqId(state, id),
+    req: getReqById(state, id),
     fetching: getIsFetching(state, "reqs"),
     error: getErrorMessage(state, "reqs"),
   };

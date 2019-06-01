@@ -1,21 +1,23 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { openModal } from "actions/ui";
+import styled from "styled-components";
+import { Header } from "semantic-ui-react";
+import history from "history/history";
 
-const Welcome = ({ auth }) => {
-  if (auth.authenticated)
-    return (
-      <>
-        <div>Hi {auth.user.firstName}!</div>
-        <Link to="signout">Logout</Link>
-      </>
-    );
+const WelcomeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const Welcome = ({ auth, openModal }) => {
+  if (auth.user) history.push("dashboard");
 
   return (
-    <div>
-      Welcome! Please <Link to="signup">Signup</Link> or{" "}
-      <Link to="signin">Login</Link>!
-    </div>
+    <WelcomeContainer>
+      <Header size="huge">Welcome</Header>
+    </WelcomeContainer>
   );
 };
 
@@ -24,4 +26,13 @@ const mapStateToProps = ({ auth }) => {
     auth,
   };
 };
-export default connect(mapStateToProps)(Welcome);
+
+const mapDispatchToProps = dispatch => {
+  return {
+    openModal: args => dispatch(openModal(args)),
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Welcome);

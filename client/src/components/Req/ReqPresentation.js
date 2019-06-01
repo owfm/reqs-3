@@ -1,13 +1,14 @@
 import React from "react";
-import styled from "styled-components";
+import formatDistance from "date-fns/formatDistance";
+import format from "date-fns/format";
 import {
   Input,
   Form,
   TextArea,
   Button,
-  Icon,
   Checkbox,
   Divider,
+  List,
 } from "semantic-ui-react";
 import { ReqPageContainer } from "./styles";
 
@@ -18,32 +19,41 @@ const styles = {
   subheading: { fontWeight: 100, marginTop: 0 },
 };
 
-const Heading = styled.h1`
-  margin-bottom: 0;
-`;
-const SubHeading = styled.h3`
-  margin-top: 0;
-  color: #474a4f;
-`;
 const ReqPresentation = ({
   requisition,
+  lesson,
   handleChange,
   toggleDone,
   save,
   discard,
 }) => {
+  if (!requisition || !lesson) return null;
   return (
     <ReqPageContainer>
-      <span>
-        <Heading styles={styles.heading}>
-          {requisition.lesson.classgroup}
-        </Heading>
-        <SubHeading styles={styles.subheading}>
-          {requisition.lesson.week}
-          {requisition.lesson.day}
-          {requisition.lesson.period}
-        </SubHeading>
-      </span>
+      <List>
+        <List.Item>
+          <List.Icon name="users" />
+          <List.Content>{lesson.classgroup}</List.Content>
+        </List.Item>
+        <List.Item>
+          <List.Icon name="calendar outline" />
+          <List.Content>{`${format(
+            new Date(requisition.date),
+            "cccc MMM Mo"
+          )} (in ${formatDistance(
+            new Date(requisition.date),
+            new Date()
+          )})`}</List.Content>
+        </List.Item>
+        <List.Item>
+          <List.Icon name="time" />
+          <List.Content>{`Period ${lesson.period}`}</List.Content>
+        </List.Item>
+        <List.Item>
+          <List.Icon name="building outline" />
+          <List.Content>{lesson.room}</List.Content>
+        </List.Item>
+      </List>
       <Divider />
       <Form>
         <h5>Lesson Title</h5>
@@ -79,34 +89,37 @@ const ReqPresentation = ({
           label="Mark this requisition as done."
         />
         <Divider />
-        <Button.Group>
-          <Button
-            onClick={e => {
-              e.preventDefault();
-              discard(requisition._id);
-            }}
-          >
-            <Icon link name="delete" />
-          </Button>
-          <Button
-            onClick={e => {
-              e.preventDefault();
-              save("draft");
-            }}
-          >
-            <Icon link name="edit outline" />
-          </Button>
-          <Button
-            type="submit"
-            disabled={!requisition.title}
-            onClick={e => {
-              e.preventDefault();
-              save("final");
-            }}
-          >
-            <Icon link name="paper plane" />
-          </Button>
-        </Button.Group>
+        <Button
+          negative
+          onClick={e => {
+            e.preventDefault();
+            discard(requisition._id);
+          }}
+          icon={"delete"}
+          labelPosition={"left"}
+          content={requisition.title ? "Delete" : "Cancel"}
+        />
+        <Button
+          disabled={!requisition.title}
+          onClick={e => {
+            e.preventDefault();
+            save("draft");
+          }}
+          icon={"edit outline"}
+          content={"Save as draft"}
+        />
+        <Button
+          positive
+          type="submit"
+          icon="paper plane"
+          labelPosition="right"
+          content="Send!"
+          disabled={!requisition.title}
+          onClick={e => {
+            e.preventDefault();
+            save("final");
+          }}
+        />
       </Form>
     </ReqPageContainer>
   );

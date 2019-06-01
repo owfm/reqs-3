@@ -82,6 +82,6 @@ export function fetchSingleSchool(id) {
         dispatch(fetchSchoolSuccess(normalize(json, schemas.school)));
         return json;
       })
-      .catch(error => dispatch(fetchSchoolFailure(error)));
+      .catch(error => dispatch(fetchSchoolFailure(error.message)));
   };
 }

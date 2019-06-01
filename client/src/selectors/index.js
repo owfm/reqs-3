@@ -5,7 +5,6 @@ import startOfWeek from "date-fns/start_of_week";
 import lastDayOfWeek from "date-fns/last_day_of_week";
 import isWithinInterval from "date-fns/isWithinInterval";
 import differenceInCalendarWeeks from "date-fns/differenceInCalendarWeeks";
-// TODO get current week from store and filter lessons
 
 const getCurrentDate = state => state.ui.currentDate;
 const getCurrentUser = state => state.auth.user;
@@ -13,10 +12,31 @@ const getSchools = state => state.entitiesById.schools;
 const getLessons = state => state.entitiesById.lessons;
 const getReqs = state => state.entitiesById.reqs;
 
+export const getReqById = (state, id) => {
+  if (!id) return null;
+  return getReqs(state)[id];
+};
+
+export const getLessonByReqId = (state, id) => {
+  if (!id) return null;
+  try {
+    const { lesson } = getReqById(state, id);
+    return getLessons(state)[lesson];
+  } catch (error) {
+    console.error("req doesn't exist: can't select lesson");
+    return null;
+  }
+};
+
 const getSchoolofCurrentUser = createSelector(
   [getSchools, getCurrentUser],
   (schools, currentUser) => {
-    return schools[currentUser.school];
+    if (!currentUser) return null;
+    try {
+      return schools[currentUser.school];
+    } catch (error) {
+      console.error("Current user doesn't have a school.");
+    }
   }
 );
 
@@ -49,16 +69,6 @@ const getCurrentWeek = createSelector(
       startOfWeek(currentDate),
       startOfWeek(halfTermStartDate)
     );
-
-    console.log("halfTermStartDate:");
-    console.log(halfTermStartDate);
-
-    console.log("currentDate:");
-    console.log(currentDate);
-
-    console.log("weeksSinceTermStart");
-    console.log(weeksSinceTermStart);
-
     // if even number of weeks since term start, must be on same week as starting week. Otherwise, swap the week.
     return weeksSinceTermStart % 2 === 0
       ? halfTermBeganWith

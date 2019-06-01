@@ -7,11 +7,11 @@ const createById = entity => {
         ...action.payload.entities[entity],
       };
     switch (action.type) {
-      case "DELETE_REQS_REQUEST":
+      case `DELETE_${entity.toUpperCase()}_SUCCESS`:
         const next = { ...state };
         delete next[action.payload];
         return {
-          next,
+          ...next,
         };
       default:
         return state;

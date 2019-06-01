@@ -1,25 +1,31 @@
 import React from "react";
 import { Card } from "semantic-ui-react";
 import { connect } from "react-redux";
-import history from "history/history";
+import { openModal } from "actions/ui";
 import getIsFetching from "reducers";
+import { OPEN_REQUISITION } from "actions/modalTypes";
 
 import emitSnackbar from "actions/snackbar";
 
 import SessionItem from "components/styles/SessionItem";
 
-const ReqMini = ({ req, lesson }) => {
+const ReqMini = ({ req, lesson, openModal }) => {
   if (!req || !lesson) return null;
-  const getReqUrl = () => {
-    return `/reqs/${req._id}`;
-  };
 
   return (
     <SessionItem day={lesson.day} period={lesson.period}>
       <Card
-        onClick={() => history.push(getReqUrl())}
-        header={`${req.title} with ${lesson.classgroup}`}
-        meta={`${lesson.room}`}
+        fluid
+        color={req.isDone ? "green" : "red"}
+        onClick={() =>
+          openModal({
+            modalType: OPEN_REQUISITION,
+            title: req.title,
+            meta: { id: req._id },
+          })
+        }
+        header={`${req.title || "[No title]"}`}
+        meta={`${lesson.classgroup} ${lesson.room}`}
       />
     </SessionItem>
   );
@@ -37,6 +43,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    openModal: params => dispatch(openModal(params)),
     emitSnackbar: message => dispatch(emitSnackbar(message)),
   };
 };

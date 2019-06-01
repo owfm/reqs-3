@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import emitSnackbar from "actions/snackbar";
 
 export default ChildComponent => {
   class ComposedComponent extends Component {
@@ -15,7 +16,7 @@ export default ChildComponent => {
 
     shouldNavigateAway() {
       if (!this.props.auth) {
-        this.props.history.push('/');
+        this.props.history.push("/");
       }
     }
 
@@ -24,9 +25,18 @@ export default ChildComponent => {
     }
   }
 
+  const mapDispatchToProps = dispatch => {
+    return {
+      emitSnackbar: message => dispatch(emitSnackbar(message)),
+    };
+  };
+
   function mapStateToProps(state) {
     return { auth: state.auth.authenticated };
   }
 
-  return connect(mapStateToProps)(ComposedComponent);
+  return connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ComposedComponent);
 };

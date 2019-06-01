@@ -4,13 +4,16 @@ import { addWeeks } from "date-fns";
 import eachDay from "date-fns/each_day";
 import startOfWeek from "date-fns/start_of_week";
 import lastDayOfWeek from "date-fns/last_day_of_week";
-const initialState = {
-  currentTimetableWeek: 1,
-  fetching: false,
-  progressBarOpen: false,
+
+const initialModalState = {
+  open: false,
+  modalType: null,
+  title: null,
+  message: null,
+  meta: {},
 };
 
-const currentDate = (state = null, action) => {
+const currentDate = (state = new Date(), action) => {
   switch (action.type) {
     case actions.SET_CURRENT_DATE:
       return action.payload;
@@ -21,45 +24,74 @@ const currentDate = (state = null, action) => {
   }
 };
 
-const currentTimetableWeek = (state = 1, action) => {
+const progressBarOpen = (state = false, action) => {
   switch (action.type) {
-    case "TOGGLE_WEEK":
-      return 3 - state;
+    case actions.CREATE_REQS_REQUEST:
+    case actions.FETCH_REQS_REQUEST:
+    case actions.DELETE_REQS_REQUEST:
+    case actions.UPDATE_REQS_REQUEST:
+    case actions.CREATE_SCHOOLS_REQUEST:
+    case actions.FETCH_SCHOOLS_REQUEST:
+    case actions.DELETE_SCHOOLS_REQUEST:
+    case actions.UPDATE_SCHOOLS_REQUEST:
+    case actions.CREATE_LESSONS_REQUEST:
+    case actions.FETCH_LESSONS_REQUEST:
+    case actions.DELETE_LESSONS_REQUEST:
+    case actions.UPDATE_LESSONS_REQUEST:
+    case action.RESTORE_DELETED_REQ_REQUEST:
+      return true;
+    case actions.CREATE_REQS_SUCCESS:
+    case actions.FETCH_REQS_SUCCESS:
+    case actions.DELETE_REQS_SUCCESS:
+    case actions.UPDATE_REQS_SUCCESS:
+    case actions.CREATE_SCHOOLS_SUCCESS:
+    case actions.FETCH_SCHOOLS_SUCCESS:
+    case actions.DELETE_SCHOOLS_SUCCESS:
+    case actions.UPDATE_SCHOOLS_SUCCESS:
+    case actions.CREATE_LESSONS_SUCCESS:
+    case actions.FETCH_LESSONS_SUCCESS:
+    case actions.DELETE_LESSONS_SUCCESS:
+    case actions.UPDATE_LESSONS_SUCCESS:
+    case action.RESTORE_DELETED_REQ_SUCCESS:
+    case actions.CREATE_REQS_FAILURE:
+    case actions.FETCH_REQS_FAILURE:
+    case actions.DELETE_REQS_FAILURE:
+    case actions.UPDATE_REQS_FAILURE:
+    case actions.CREATE_SCHOOLS_FAILURE:
+    case actions.FETCH_SCHOOLS_FAILURE:
+    case actions.DELETE_SCHOOLS_FAILURE:
+    case actions.UPDATE_SCHOOLS_FAILURE:
+    case actions.CREATE_LESSONS_FAILURE:
+    case actions.FETCH_LESSONS_FAILURE:
+    case actions.DELETE_LESSONS_FAILURE:
+    case actions.UPDATE_LESSONS_FAILURE:
+    case action.RESTORE_DELETED_REQ_FAILURE:
+      return false;
     default:
       return state;
   }
 };
 
-const progressBar = (state = initialState, action) => {
+const modal = (state = initialModalState, action) => {
   switch (action.type) {
-    case actions.SET_PROGRESS_BAR:
+    case actions.OPEN_MODAL:
       return {
-        ...state,
-        progressBarOpen: action.payload,
+        ...action.payload,
       };
-    case actions.FETCH_REQ_REQUEST:
-    case actions.FETCH_REQS_REQUEST:
-    case actions.DELETE_REQ_REQUEST:
-    case actions.SUBMIT_REQ_REQUEST:
-    case actions.UPDATE_REQ_REQUEST:
-      return {
-        ...state,
-        progressBarOpen: true,
-      };
-    case actions.FETCH_REQ_FAILURE:
-    case actions.FETCH_REQS_FAILURE:
-    case actions.DELETE_REQ_FAILURE:
-    case actions.UPDATE_REQ_FAILURE:
-    case actions.SUBMIT_REQ_SUCCESS:
-    case actions.FETCH_REQS_SUCCESS:
-    case actions.DELETE_REQ_SUCCESS:
-    case actions.UPDATE_REQ_SUCCESS:
-    case actions.FETCH_REQ_SUCCESS:
-    case action.RESTORE_DELETED_REQ_REQUEST:
-      return {
-        ...state,
-        progressBarOpen: false,
-      };
+    case actions.CLOSE_MODAL:
+      return initialModalState;
+
+    default:
+      return state;
+  }
+};
+
+const drawer = (state = false, action) => {
+  switch (action.type) {
+    case actions.OPEN_DRAWER:
+      return true;
+    case actions.CLOSE_DRAWER:
+      return false;
     default:
       return state;
   }
@@ -67,8 +99,9 @@ const progressBar = (state = initialState, action) => {
 
 export default combineReducers({
   currentDate,
-  currentTimetableWeek,
-  progressBar,
+  progressBarOpen,
+  modal,
+  drawer,
 });
 
 export const getDatesOfCurrentIsoWeek = state => {

@@ -1,45 +1,37 @@
-import React, { Component } from "react";
+import React from "react";
+import { Input, Form } from "semantic-ui-react";
 import { reduxForm, Field } from "redux-form";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import * as actions from "actions/auth";
 
-class Signin extends Component {
-  onSubmit = formProps => {
-    this.props.signin(formProps, () => {
-      this.props.history.push("/");
-    });
-  };
-
-  render() {
-    const { handleSubmit } = this.props;
-
-    return (
-      <form onSubmit={handleSubmit(this.onSubmit)}>
-        <fieldset>
+const Signin = ({ signin, history, errorMessage }) => {
+  return (
+    <>
+      <Form>
+        <Form.Field>
           <label>Email</label>
           <Field
             name="email"
             type="text"
-            component="input"
+            component={Input}
             autoComplete="none"
           />
-        </fieldset>
-        <fieldset>
+        </Form.Field>
+        <Form.Field>
           <label>Password</label>
           <Field
             name="password"
             type="password"
-            component="input"
+            component={Input}
             autoComplete="none"
           />
-        </fieldset>
-        <div>{this.props.errorMessage}</div>
-        <button>Sign In!</button>
-      </form>
-    );
-  }
-}
+        </Form.Field>
+      </Form>
+      <div>{errorMessage}</div>
+    </>
+  );
+};
 
 function mapStateToProps(state) {
   return { errorMessage: state.auth.errorMessage };

@@ -6,5 +6,5 @@ var userController = require("../controllers/userController");
 router.get("/", userController.getAllUsers);
 router.get("/:id", userController.getUserById);
 // router.delete("/:id", userController.deleteSingleUser);
-router.put("/:id", userController.patchUser);
+router.patch("/:id", userController.patchUser);
 module.exports = router;

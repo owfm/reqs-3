@@ -44,14 +44,14 @@ export function fetchLessons() {
 
 const requestDeleteLesson = id => {
   return {
-    type: actions.DELETE_LESSON_REQUEST,
+    type: actions.DELETE_LESSONS_REQUEST,
     payload: id,
   };
 };
 
 const deleteLessonFailure = error => {
   return {
-    type: actions.DELETE_LESSON_FAILURE,
+    type: actions.DELETE_LESSONS_FAILURE,
     payload: error,
     error: true,
   };
@@ -59,7 +59,7 @@ const deleteLessonFailure = error => {
 
 const deleteLessonsSuccess = id => {
   return {
-    type: actions.DELETE_LESSON_SUCCESS,
+    type: actions.DELETE_LESSONS_SUCCESS,
     payload: id,
   };
 };

@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import Button from "@material-ui/core/Button";
 
 const teacherUse = {
   firstName: "ollie",
@@ -29,7 +30,7 @@ const userSelector = ({ dispatch }) => {
         // flexDirection: "column",
       }}
     >
-      <div
+      <Button
         onClick={() =>
           dispatch({
             type: "auth_user",
@@ -38,24 +39,30 @@ const userSelector = ({ dispatch }) => {
         }
       >
         Login Teacher
-      </div>
-      <div
+      </Button>
+      <Button
         onClick={() =>
           dispatch({
             type: "auth_user",
-            payload: { user: technicianUse, token: "asdlkajsd" },
+            payload: {
+              user: technicianUse,
+              token:
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1Y2YwM2U4M2IxZGU2NzI1MDVmZTI1OTciLCJpYXQiOjE1NTkzMzY2MTc0MTZ9.iUK_bfHnwqJRB8SwT61bKkGyYtkbiTDB-tiiU34HeuI",
+            },
           })
         }
       >
         Login Technician
-      </div>
-      <div
-        onClick={() =>
-          dispatch({ type: "auth_user", payload: { user: null, token: null } })
-        }
+      </Button>
+      <Button
+        onClick={() => {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          dispatch({ type: "auth_user", payload: "" });
+        }}
       >
         Logout
-      </div>
+      </Button>
     </div>
   );
 };

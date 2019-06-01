@@ -10,14 +10,14 @@ import {
 
 const requestDeleteReq = id => {
   return {
-    type: "DELETE_REQS_REQUEST",
+    type: actions.DELETE_REQS_REQUEST,
     payload: id,
   };
 };
 
 const deleteReqFailure = error => {
   return {
-    type: "DELETE_REQS_FAILURE",
+    type: actions.DELETE_REQS_FAILURE,
     payload: error,
     error: true,
   };
@@ -25,7 +25,7 @@ const deleteReqFailure = error => {
 
 const deleteReqsSuccess = id => {
   return {
-    type: "DELETE_REQS_SUCCESS",
+    type: actions.DELETE_REQS_SUCCESS,
     payload: id,
   };
 };
@@ -46,21 +46,21 @@ export const deleteReq = id => {
 
 const createReqRequest = payload => {
   return {
-    type: "CREATE_REQS_REQUEST",
+    type: actions.CREATE_REQS_REQUEST,
     payload,
   };
 };
 
 const createReqSuccess = payload => {
   return {
-    type: "CREATE_REQS_SUCCESS",
+    type: actions.CREATE_REQS_SUCCESS,
     payload,
   };
 };
 
 const createReqFailure = payload => {
   return {
-    type: "CREATE_REQS_FAILURE",
+    type: actions.CREATE_REQS_FAILURE,
     payload,
   };
 };
@@ -98,21 +98,21 @@ export function createSingleReq(requisition) {
 
 const updateReqsRequest = payload => {
   return {
-    type: "UPDATE_REQS_REQUEST",
+    type: actions.UPDATE_REQS_REQUEST,
     payload,
   };
 };
 
 const updateReqsSuccess = payload => {
   return {
-    type: "UPDATE_REQS_SUCCESS",
+    type: actions.UPDATE_REQS_SUCCESS,
     payload,
   };
 };
 
 const updateReqsFailure = payload => {
   return {
-    type: "UPDATE_REQS_FAILURE",
+    type: actions.UPDATE_REQS_FAILURE,
     payload,
   };
 };
@@ -137,44 +137,6 @@ export function updateReq(requisition) {
   };
 }
 
-// payload == id
-export const fetchReqRequest = payload => {
-  return {
-    type: actions.FETCH_REQ_REQUEST,
-    payload,
-  };
-};
-
-// payload == req object
-export const fetchReqSuccess = payload => {
-  return {
-    type: actions.FETCH_REQ_SUCCESS,
-    payload,
-  };
-};
-
-// payload = error object
-export const fetchReqFailure = payload => {
-  return {
-    type: actions.FETCH_REQ_FAILURE,
-    payload,
-  };
-};
-
-export function fetchSingleReq(id) {
-  return dispatch => {
-    dispatch(fetchReqRequest);
-    return fetch(`/reqs/${id}`)
-      .then(handleErrors)
-      .then(response => response.json())
-      .then(json => {
-        dispatch(fetchReqSuccess(normalize(json.data, schemas.reqs)));
-        return json;
-      })
-      .catch(error => dispatch(fetchReqFailure(error)));
-  };
-}
-
 const fetchReqsRequest = () => {
   return {
     type: actions.FETCH_REQS_REQUEST,
@@ -195,10 +157,12 @@ const fetchReqsSuccess = reqs => {
   };
 };
 
-export function fetchReqs() {
+export function fetchReqs(id = null) {
   return dispatch => {
+    const url = id ? `/reqs/${id}` : `/reqs`;
+
     dispatch(fetchReqsRequest());
-    return fetch("/reqs")
+    return fetch(url)
       .then(handleErrors)
       .then(response => response.json())
       .then(json => {
@@ -212,19 +176,19 @@ export function fetchReqs() {
 
 const restoreDeletedReqRequest = () => {
   return {
-    type: actions.RESTORE_DELETED_REQ_REQUEST,
+    type: actions.RESTORE_DELETED_REQS_REQUEST,
   };
 };
 
 const restoreDeletedReqSuccess = () => {
   return {
-    type: actions.RESTORE_DELETED_REQ_SUCCESS,
+    type: actions.RESTORE_DELETED_REQS_SUCCESS,
   };
 };
 
 const restoreDeletedReqFailure = () => {
   return {
-    type: actions.RESTORE_DELETED_REQ_FAILURE,
+    type: actions.RESTORE_DELETED_REQS_FAILURE,
   };
 };
 
