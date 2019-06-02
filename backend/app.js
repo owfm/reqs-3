@@ -7,6 +7,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const requireAuth = require("./routes/auth");
 
+const path = require("path");
+// Serve static files from the React frontend app
+
 // set up DB
 // mongoose.connect(`mongodb://localhost:27017/reqs-db`);
 const { MONGO_PASS } = process.env;
@@ -19,6 +22,11 @@ try {
   next(error);
 }
 
+app.use(express.static(path.join(__dirname, "../client/build")));
+// Anything that doesn't match the above, send back index.html
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "../client/build/index.html"));
+});
 app.use(morgan("combined"));
 app.use(cors());
 const jsonParser = bodyParser.json({ type: "*/*" });
@@ -40,12 +48,10 @@ app.use("/upload", uploadRouter);
 // error handling
 app.use(function(error, req, res, next) {
   console.log(error);
-  res
-    .status(500)
-    .send({
-      data: null,
-      error: { message: error.message || "Somthing went wrong!" },
-    });
+  res.status(500).send({
+    data: null,
+    error: { message: error.message || "Somthing went wrong!" },
+  });
 });
 
 module.exports = app;
