@@ -16,7 +16,7 @@ const LessonMini = ({ lesson, createNewReqFromLessonId, openModal }) => {
       openModal({
         modalType: OPEN_REQUISITION,
         title: `Submit New Requisition`,
-        meta: { id: requisition._id },
+        meta: { id: requisition._id, existingRequisition: false },
       });
     } catch (error) {
       emitSnackbar("Sorry, something went wrong.");

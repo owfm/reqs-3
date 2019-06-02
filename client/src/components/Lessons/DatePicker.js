@@ -1,9 +1,20 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import { Icon } from "semantic-ui-react";
 import { setCurrentDate, jumpWeeks } from "actions/date";
-// import DateFnsUtils from "@date-io/date-fns"; // choose your lib
+import { getCurrentDate } from "reducers/ui";
+import { getDatesOfCurrentIsoWeek } from "../../reducers/ui";
+import { forwardOneDay } from "../../actions/date";
+import { backwardOneDay } from "../../actions/date";
 
-const datePicker = ({ currentDate, setCurrentDate, jump }) => {
+const datePicker = ({
+  currentDate,
+  setCurrentDate,
+  jumpWeeks,
+  forwardOneDay,
+  backwardOneDay,
+  datesOfCurrentIsoWeek,
+}) => {
   useEffect(() => {
     if (!currentDate) {
       setCurrentDateToToday();
@@ -18,25 +29,58 @@ const datePicker = ({ currentDate, setCurrentDate, jump }) => {
 
   return (
     <>
-      <br />
-      <button onClick={() => jump(-1)}>Back 1 week</button>
-      <button onClick={() => setCurrentDateToToday()}>Today</button>
-      <p>{currentDate.toString()}</p>
-      <button onClick={() => jump(+1)}>Forward 1 week</button>
+      <Icon
+        compact
+        basic
+        circular
+        onClick={() => jumpWeeks(-1)}
+        name="angle double left"
+      />
+      <Icon
+        compact
+        basic
+        circular
+        onClick={() => backwardOneDay()}
+        name="angle left"
+      />
+      <Icon
+        compact
+        basic
+        circular
+        onClick={() => setCurrentDate(new Date())}
+        name="home"
+      />
+
+      <Icon
+        compact
+        basic
+        circular
+        onClick={() => forwardOneDay()}
+        name="angle right"
+      />
+      <Icon
+        compact
+        basic
+        circular
+        onClick={() => jumpWeeks(+1)}
+        name="angle double right"
+      />
     </>
   );
 };
 
 const mapStateToProps = state => {
-  const { currentDate } = state.ui;
   return {
-    currentDate,
+    currentDate: getCurrentDate(state),
+    datesOfCurrentIsoWeek: getDatesOfCurrentIsoWeek(state),
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   setCurrentDate: date => dispatch(setCurrentDate(date)),
-  jump: weeks => dispatch(jumpWeeks(weeks)),
+  jumpWeeks: weeks => dispatch(jumpWeeks(weeks)),
+  forwardOneDay: () => dispatch(forwardOneDay()),
+  backwardOneDay: () => dispatch(backwardOneDay()),
 });
 
 export default connect(

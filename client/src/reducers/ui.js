@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 import * as actions from "actions/types";
-import { addWeeks } from "date-fns";
+import { addWeeks, addDays } from "date-fns";
+
 import eachDay from "date-fns/each_day";
 import startOfWeek from "date-fns/start_of_week";
 import lastDayOfWeek from "date-fns/last_day_of_week";
@@ -13,12 +14,19 @@ const initialModalState = {
   meta: {},
 };
 
-const currentDate = (state = new Date(), action) => {
+const currentDate = (state = { date: new Date(), error: null }, action) => {
   switch (action.type) {
     case actions.SET_CURRENT_DATE:
-      return action.payload;
+      return { error: null, date: action.payload };
+    case actions.SET_DATE_FAILURE:
+      return { error: action.payload, date: null };
     case actions.JUMP_WEEKS:
-      return addWeeks(state, action.payload);
+      return { error: null, date: addWeeks(state.date, action.payload) };
+    case actions.FORWARD_ONE_DAY:
+      return { error: null, date: addDays(state.date, 1) };
+    case actions.BACKWARD_ONE_DAY:
+      return { error: null, date: addDays(state.date, -1) };
+
     default:
       return state;
   }
@@ -104,10 +112,17 @@ export default combineReducers({
   drawer,
 });
 
+// selectors
+
+export const getCurrentDate = state => {
+  return state.ui.currentDate.date ? new Date(state.ui.currentDate.date) : null;
+};
+
 export const getDatesOfCurrentIsoWeek = state => {
-  if (!state.ui.currentDate) return null;
-  const currentDateObj = new Date(state.ui.currentDate);
-  return eachDay(startOfWeek(currentDateObj), lastDayOfWeek(currentDateObj));
+  const currentDate = getCurrentDate(state);
+  return currentDate
+    ? eachDay(startOfWeek(currentDate), lastDayOfWeek(currentDate))
+    : null;
 };
 
 // this function takes a weekday name and returns the index appropriate date from the array returned by getDatesOfCurrentIsoWeek

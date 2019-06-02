@@ -21,7 +21,7 @@ const ReqMini = ({ req, lesson, openModal }) => {
           openModal({
             modalType: OPEN_REQUISITION,
             title: req.title,
-            meta: { id: req._id },
+            meta: { id: req._id, existingRequisition: true },
           })
         }
         header={`${req.title || "[No title]"}`}

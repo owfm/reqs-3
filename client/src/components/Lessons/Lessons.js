@@ -8,7 +8,7 @@ import { fetchReqs } from "actions/req";
 import { fetchSingleSchool } from "actions/schools";
 
 import { getErrorMessage, getIsFetching } from "reducers";
-import { getSessionIdsForCurrentWeek } from "selectors";
+import { getCurrentWeek, getSessionIdsForCurrentWeek } from "selectors";
 
 import LessonMini from "components/Lessons/LessonMini";
 import ReqMini from "components/Lessons/ReqMini";

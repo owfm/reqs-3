@@ -17,8 +17,6 @@ const Req = ({
   emitSnackbar,
   match,
   loading,
-
-  history,
   closeModal,
   id,
 }) => {

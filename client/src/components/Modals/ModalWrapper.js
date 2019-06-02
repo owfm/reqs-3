@@ -7,14 +7,7 @@ import Signin from "components/auth/Signin";
 import SignInButton from "../auth/SignInButton";
 import * as types from "actions/modalTypes";
 
-const ModalWrapper = ({
-  open,
-  modalType,
-  title,
-  message,
-  closeModal,
-  meta,
-}) => {
+const ModalWrapper = ({ open, modalType, title, closeModal, meta }) => {
   if (!open) return null;
 
   switch (modalType) {
@@ -34,7 +27,12 @@ const ModalWrapper = ({
     }
     case types.OPEN_REQUISITION: {
       return (
-        <Modal closeOnDimmerClick={false} open={true} onClose={closeModal}>
+        <Modal
+          closeIcon={meta.existingRequisition}
+          closeOnDimmerClick={meta.existingRequisition}
+          open={true}
+          onClose={closeModal}
+        >
           <Modal.Header>{title}</Modal.Header>
           <Modal.Content>
             <Req id={meta.id} />

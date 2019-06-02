@@ -5,8 +5,11 @@ import startOfWeek from "date-fns/start_of_week";
 import lastDayOfWeek from "date-fns/last_day_of_week";
 import isWithinInterval from "date-fns/isWithinInterval";
 import differenceInCalendarWeeks from "date-fns/differenceInCalendarWeeks";
+import addDays from "date-fns/addDays";
+import isMonday from "date-fns/isMonday";
+import isFriday from "date-fns/isFriday";
 
-const getCurrentDate = state => state.ui.currentDate;
+const getCurrentDate = state => state.ui.currentDate.date;
 const getCurrentUser = state => state.auth.user;
 const getSchools = state => state.entitiesById.schools;
 const getLessons = state => state.entitiesById.lessons;
@@ -40,7 +43,7 @@ const getSchoolofCurrentUser = createSelector(
   }
 );
 
-const getCurrentWeek = createSelector(
+export const getCurrentWeek = createSelector(
   [getSchoolofCurrentUser, getCurrentDate],
   (schoolofCurrentUser, currentDate) => {
     if (!schoolofCurrentUser) return null;
@@ -48,11 +51,23 @@ const getCurrentWeek = createSelector(
     // find how many weeks have passed since start of term
     // find if currentDate is in term-time
     let inTerm = "";
-    Object.keys(termDates).forEach(term => {
+    Object.keys(termDates).some(term => {
       let [start, end] = termDates[term];
       start = new Date(start);
       end = new Date(end);
-      if (isWithinInterval(currentDate, { start, end })) inTerm = term;
+
+      // HACKY: if start date is a Monday, move it to Sunday (back 1 day). This is because we want the following
+      // week to show if the user's current day is set to a Sunday. Only a problem on the last day of a
+      // holiday. Same reason at the end of term.
+      start = isMonday(start) ? addDays(start, -1) : start;
+      end = isFriday(end) ? addDays(end, 1) : end;
+
+      // check if date is within term-time
+      if (isWithinInterval(currentDate, { start, end })) {
+        inTerm = term;
+        return true;
+      }
+      return false;
     });
 
     if (!inTerm) return null; // must be in holidaytime

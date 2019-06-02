@@ -80,4 +80,8 @@ export const AUTH_USER = "auth_user";
 export const AUTH_ERROR = "auth_error";
 
 export const SET_CURRENT_DATE = "SET_CURRENT_DATE";
+export const SET_DATE_FAILURE = "SET_DATE_FAILURE";
 export const JUMP_WEEKS = "JUMP_WEEKS";
+
+export const FORWARD_ONE_DAY = "FORWARD_ONE_DAY";
+export const BACKWARD_ONE_DAY = "BACKWARD_ONE_DAY";
