@@ -38,7 +38,6 @@ app.use(express.static(path.join(__dirname, "client/build")));
 app.use("/auth", jsonParser, authRouter);
 app.use("/users", jsonParser, usersRouter);
 app.use("/reqs", jsonParser, reqsRouter);
-x;
 app.use("/schools", jsonParser, schoolsRouter);
 app.use("/lessons", jsonParser, lessonsRouter);
 app.use("/upload", uploadRouter);
