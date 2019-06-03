@@ -1,9 +1,8 @@
 import { createSelector } from "reselect";
 import pickby from "lodash.pickby";
-import isWithinRange from "date-fns/is_within_range";
-import startOfWeek from "date-fns/start_of_week";
-import lastDayOfWeek from "date-fns/last_day_of_week";
 import isWithinInterval from "date-fns/isWithinInterval";
+import startOfWeek from "date-fns/startOfWeek";
+import lastDayOfWeek from "date-fns/lastDayOfWeek";
 import differenceInCalendarWeeks from "date-fns/differenceInCalendarWeeks";
 import addDays from "date-fns/addDays";
 import isMonday from "date-fns/isMonday";
@@ -102,11 +101,10 @@ const getReqsForCurrentWeek = createSelector(
   [getCurrentDate, getReqs],
   (currentDate, reqs) => {
     return pickby(reqs, (value, key) => {
-      return isWithinRange(
-        reqs[key].date,
-        startOfWeek(currentDate),
-        lastDayOfWeek(currentDate)
-      );
+      return isWithinInterval(reqs[key].date, {
+        start: startOfWeek(currentDate),
+        end: lastDayOfWeek(currentDate),
+      });
     });
   }
 );

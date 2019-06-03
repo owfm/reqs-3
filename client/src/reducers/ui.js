@@ -2,10 +2,9 @@ import { combineReducers } from "redux";
 import * as actions from "actions/types";
 import { addWeeks, addDays } from "date-fns";
 
-import eachDay from "date-fns/each_day";
-import startOfWeek from "date-fns/start_of_week";
-import lastDayOfWeek from "date-fns/last_day_of_week";
-
+import eachDayOfInterval from "date-fns/eachDayOfInterval";
+import startOfWeek from "date-fns/startOfWeek";
+import lastDayOfWeek from "date-fns/lastDayOfWeek";
 const initialModalState = {
   open: false,
   modalType: null,
@@ -120,8 +119,12 @@ export const getCurrentDate = state => {
 
 export const getDatesOfCurrentIsoWeek = state => {
   const currentDate = getCurrentDate(state);
+
   return currentDate
-    ? eachDay(startOfWeek(currentDate), lastDayOfWeek(currentDate))
+    ? eachDayOfInterval({
+        start: startOfWeek(new Date(currentDate)),
+        end: lastDayOfWeek(new Date(currentDate)),
+      })
     : null;
 };
 
