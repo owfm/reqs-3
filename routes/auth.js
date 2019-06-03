@@ -1,4 +1,3 @@
-var express = require("Express");
 const router = express.Router();
 const Authentication = require("../controllers/authentication");
 const passportService = require("../services/passport");
