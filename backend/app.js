@@ -22,11 +22,7 @@ try {
   next(error);
 }
 
-app.use(express.static(path.join(__dirname, "../client/build")));
 // Anything that doesn't match the above, send back index.html
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "../client/build/index.html"));
-});
 app.use(morgan("combined"));
 app.use(cors());
 const jsonParser = bodyParser.json({ type: "*/*" });
@@ -38,12 +34,17 @@ var schoolsRouter = require("./routes/schools");
 var uploadRouter = require("./routes/upload");
 var lessonsRouter = require("./routes/lessons");
 
+app.use(express.static(path.join(__dirname, "../client/build")));
 app.use("/auth", jsonParser, authRouter);
 app.use("/users", jsonParser, usersRouter);
 app.use("/reqs", jsonParser, reqsRouter);
 app.use("/schools", jsonParser, schoolsRouter);
 app.use("/lessons", jsonParser, lessonsRouter);
 app.use("/upload", uploadRouter);
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "../client/build/index.html"));
+});
 
 // error handling
 app.use(function(error, req, res, next) {

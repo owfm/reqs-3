@@ -3,7 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon --signal SIGHUP ./bin/www"
+    "dev": "nodemon --signal SIGHUP ./bin/www",
+    "start": "node ./bin/www"
+  },
+  "engines": {
+    "node": "10.7.0"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
@@ -26,7 +30,5 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0"
   },
-  "devDependencies": {
-    "lorem-ipsum": "^2.0.2"
-  }
+  "devDependencies": {}
 }
