@@ -1,6 +1,6 @@
 {
-  "name": "backend",
-  "version": "0.0.0",
+  "name": "reqs-server",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "nodemon --signal SIGHUP ./bin/www",
@@ -32,5 +32,21 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "description": "Software for School Science Labs",
+  "main": "./bin/www",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/owfm/reqs-3.git"
+  },
+  "keywords": [
+    "Express",
+    "React"
+  ],
+  "author": "O Mansell",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/owfm/reqs-3/issues"
+  },
+  "homepage": "https://github.com/owfm/reqs-3#readme"
 }
