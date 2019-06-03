@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "nodemon --signal SIGHUP ./bin/www",
     "start": "node ./bin/www",
-    "all": "concurrently \"npm run dev\" \"cd client && npm run start\" "
+    "all": "concurrently \"npm run dev\" \"cd client && npm run start\" ",
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "engines": {
     "node": "10.7.0"
