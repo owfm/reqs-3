@@ -1,7 +1,5 @@
 import { AUTH_USER, AUTH_ERROR } from "actions/types";
 
-const noUser = {};
-
 const defaultUser = {
   admin: false,
   firstName: "Oliver",
@@ -12,11 +10,11 @@ const defaultUser = {
   school: "5cf1036d92d4dc378f0a43e6",
 };
 
-const INITIAL_STATE_LOGGED_OUT = {
-  user: null,
-  authenticated: null,
-  errorMessage: "",
-};
+// const INITIAL_STATE_LOGGED_OUT = {
+//   user: null,
+//   authenticated: null,
+//   errorMessage: "",
+// };
 
 const INITIAL_STATE_LOGGED_IN = {
   user: defaultUser,

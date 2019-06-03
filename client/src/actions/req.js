@@ -33,7 +33,7 @@ const deleteReqsSuccess = id => {
 export const deleteReq = id => {
   return async dispatch => {
     dispatch(requestDeleteReq(id));
-    return await fetch(`/reqs/${id}`, { method: "DELETE" })
+    return await fetch(`api/v1/reqs/${id}`, { method: "DELETE" })
       .then(handleErrors)
       .then(() => {
         const undoable = true;
@@ -78,7 +78,7 @@ export function createSingleReq(requisition) {
 
     // MAYBE BETTER: HAVE COMPONENT CALLING CREATESINGLEREQ ASSIGN DATE?
 
-    return fetch("/reqs", {
+    return fetch("api/v1/reqs", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...requisition, date }),
@@ -120,7 +120,7 @@ const updateReqsFailure = payload => {
 export function updateReq(requisition) {
   return dispatch => {
     dispatch(updateReqsRequest(requisition._id));
-    return fetch(`/reqs/${requisition._id}`, {
+    return fetch(`api/v1/reqs/${requisition._id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requisition),
@@ -159,7 +159,7 @@ const fetchReqsSuccess = reqs => {
 
 export function fetchReqs(id = null) {
   return dispatch => {
-    const url = id ? `/reqs/${id}` : `/reqs`;
+    const url = id ? `api/v1/reqs/${id}` : `api/v1/reqs`;
 
     dispatch(fetchReqsRequest());
     return fetch(url)

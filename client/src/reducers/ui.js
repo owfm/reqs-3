@@ -1,6 +1,9 @@
 import { combineReducers } from "redux";
 import * as actions from "actions/types";
-import { addWeeks, addDays } from "date-fns";
+import addWeeks from "date-fns/addWeeks";
+import addDays from "date-fns/addDays";
+import parseISO from "date-fns/parseISO";
+import parse from "date-fns/parse";
 
 import eachDayOfInterval from "date-fns/eachDayOfInterval";
 import startOfWeek from "date-fns/startOfWeek";

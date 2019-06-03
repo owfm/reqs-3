@@ -35,12 +35,12 @@ var uploadRouter = require("./routes/upload");
 var lessonsRouter = require("./routes/lessons");
 
 app.use(express.static(path.join(__dirname, "client", "build")));
-app.use("/auth", jsonParser, authRouter);
-app.use("/users", jsonParser, usersRouter);
-app.use("/reqs", jsonParser, reqsRouter);
-app.use("/schools", jsonParser, schoolsRouter);
-app.use("/lessons", jsonParser, lessonsRouter);
-app.use("/upload", uploadRouter);
+app.use("/api/v1/auth", jsonParser, authRouter);
+app.use("/api/v1/users", jsonParser, usersRouter);
+app.use("/api/v1/reqs", jsonParser, reqsRouter);
+app.use("/api/v1/schools", jsonParser, schoolsRouter);
+app.use("/api/v1/lessons", jsonParser, lessonsRouter);
+app.use("/api/v1/upload", uploadRouter);
 
 app.get("*", function(req, res) {
   const index = path.join(__dirname, "client", "build", "index.html");

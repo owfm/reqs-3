@@ -27,7 +27,7 @@ const fetchLessonsSuccess = lessons => {
 export function fetchLessons() {
   return dispatch => {
     dispatch(fetchLessonsRequest());
-    return fetch("/lessons")
+    return fetch("api/v1/lessons")
       .then(handleErrors)
       .then(response => {
         return response.json();
@@ -67,7 +67,7 @@ const deleteLessonsSuccess = id => {
 export const deleteLesson = id => {
   return async dispatch => {
     dispatch(requestDeleteLesson(id));
-    return await fetch(`/lessons/${id}`, { method: "DELETE" })
+    return await fetch(`api/v1/lessons/${id}`, { method: "DELETE" })
       .then(handleErrors)
       .then(() => {
         dispatch(deleteLessonsSuccess(id));

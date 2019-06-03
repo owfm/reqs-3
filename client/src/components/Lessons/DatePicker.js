@@ -13,7 +13,6 @@ const datePicker = ({
   jumpWeeks,
   forwardOneDay,
   backwardOneDay,
-  datesOfCurrentIsoWeek,
 }) => {
   useEffect(() => {
     if (!currentDate) {
@@ -30,36 +29,21 @@ const datePicker = ({
   return (
     <>
       <Icon
-        compact
         basic
         circular
         onClick={() => jumpWeeks(-1)}
         name="angle double left"
       />
+      <Icon basic circular onClick={() => backwardOneDay()} name="angle left" />
       <Icon
-        compact
-        basic
-        circular
-        onClick={() => backwardOneDay()}
-        name="angle left"
-      />
-      <Icon
-        compact
         basic
         circular
         onClick={() => setCurrentDate(new Date())}
         name="home"
       />
 
+      <Icon basic circular onClick={() => forwardOneDay()} name="angle right" />
       <Icon
-        compact
-        basic
-        circular
-        onClick={() => forwardOneDay()}
-        name="angle right"
-      />
-      <Icon
-        compact
         basic
         circular
         onClick={() => jumpWeeks(+1)}

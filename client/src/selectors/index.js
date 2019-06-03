@@ -8,7 +8,7 @@ import addDays from "date-fns/addDays";
 import isMonday from "date-fns/isMonday";
 import isFriday from "date-fns/isFriday";
 
-const getCurrentDate = state => state.ui.currentDate.date;
+const getCurrentDate = state => new Date(state.ui.currentDate.date);
 const getCurrentUser = state => state.auth.user;
 const getSchools = state => state.entitiesById.schools;
 const getLessons = state => state.entitiesById.lessons;
@@ -101,7 +101,7 @@ const getReqsForCurrentWeek = createSelector(
   [getCurrentDate, getReqs],
   (currentDate, reqs) => {
     return pickby(reqs, (value, key) => {
-      return isWithinInterval(reqs[key].date, {
+      return isWithinInterval(new Date(reqs[key].date), {
         start: startOfWeek(currentDate),
         end: lastDayOfWeek(currentDate),
       });

@@ -28,7 +28,7 @@ export function createSchool(school) {
   return dispatch => {
     dispatch(createSchoolRequest());
 
-    return fetch("/schools", {
+    return fetch("api/v1/schools", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...school }),
@@ -75,7 +75,7 @@ export const fetchSchoolFailure = payload => {
 export function fetchSingleSchool(id) {
   return dispatch => {
     dispatch(fetchSchoolRequest(id));
-    return fetch(`/schools/${id}`)
+    return fetch(`api/v1/schools/${id}`)
       .then(handleErrors)
       .then(response => response.json())
       .then(json => {

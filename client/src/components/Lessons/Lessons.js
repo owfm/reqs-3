@@ -1,15 +1,17 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash.isempty";
-import requireAuth from "components/auth/requireAuth";
+
 import * as styles from "./styles";
+
 import { fetchLessons } from "actions/lessons";
 import { fetchReqs } from "actions/req";
 import { fetchSingleSchool } from "actions/schools";
 
 import { getErrorMessage, getIsFetching } from "reducers";
-import { getCurrentWeek, getSessionIdsForCurrentWeek } from "selectors";
+import { getSessionIdsForCurrentWeek } from "selectors";
 
+import requireAuth from "components/auth/requireAuth";
 import LessonMini from "components/Lessons/LessonMini";
 import ReqMini from "components/Lessons/ReqMini";
 import DatePicker from "components/Lessons/DatePicker";
