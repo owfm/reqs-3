@@ -34,7 +34,7 @@ var schoolsRouter = require("./routes/schools");
 var uploadRouter = require("./routes/upload");
 var lessonsRouter = require("./routes/lessons");
 
-app.use(express.static(path.join(__dirname, "../client/build")));
+app.use(express.static(path.join(__dirname, "./client/build")));
 app.use("/auth", jsonParser, authRouter);
 app.use("/users", jsonParser, usersRouter);
 app.use("/reqs", jsonParser, reqsRouter);
@@ -43,7 +43,7 @@ app.use("/lessons", jsonParser, lessonsRouter);
 app.use("/upload", uploadRouter);
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "../client/build/index.html"));
+  res.sendFile(path.join(__dirname + "./client/build/index.html"));
 });
 
 // error handling
