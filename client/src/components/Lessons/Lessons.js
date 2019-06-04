@@ -17,10 +17,12 @@ import ReqMini from "components/Lessons/ReqMini";
 import DatePicker from "components/Lessons/DatePicker";
 import PeriodRow from "components/Lessons/PeriodRow";
 import DayHeader from "components/Lessons/DayHeader";
+import { getHolidayDatesForSchool } from "../../selectors";
 
 const Lessons = ({
   lessonIds = [],
   reqIds = [],
+  holidayDates,
   fetchingLessons,
   fetchingReqs,
   fetchReqs,
@@ -66,9 +68,9 @@ const Lessons = ({
       >
         ReFetch
       </button>
-      import
       <DatePicker />
       <styles.MainGrid periods={6}>
+        {/* empty div below is top left corner box of this grid */}
         <div />
         <PeriodRow />
         <DayHeader />
@@ -94,6 +96,7 @@ const mapStateToProps = state => {
     lessonIds,
     reqIds,
     currentWeek: state.ui.currentTimetableWeek,
+    holidayDates: getHolidayDatesForSchool(state),
     lessonError: getErrorMessage(state, "lessons"),
     reqsError: getErrorMessage(state, "reqs"),
     fetchingLessons: getIsFetching(state, "lessons"),
