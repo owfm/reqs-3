@@ -11,6 +11,10 @@ import setHours from "date-fns/setHours";
 import setMinutes from "date-fns/setMinutes";
 import setSeconds from "date-fns/setSeconds";
 import eachDayOfInterval from "date-fns/eachDayOfInterval";
+import isSameDay from "date-fns/isSameDay";
+import isWeekend from "date-fns/isWeekend";
+
+import { getDatesOfCurrentIsoWeek } from "reducers/ui";
 
 const getCurrentDate = state =>
   // set time to exactly Midday to make below selectors work with intervals
@@ -65,11 +69,26 @@ export const getHolidayDatesForSchool = createSelector(
   }
 );
 
+export const getHolidayDatesForCurrentWeek = createSelector(
+  [getHolidayDatesForSchool, getDatesOfCurrentIsoWeek],
+  (allHolidays, datesOfCurrentIsoWeek) => {
+    return datesOfCurrentIsoWeek
+      .filter(d => allHolidays.some(h => isSameDay(d, h)))
+      .filter(d => !isWeekend(d));
+  }
+);
+
 const isDateInTerm = (date, termDates) => {
-  Object.keys(termDates).forEach(term => {
-    if (isWithinInterval(date, { start: term[0], end: term[1] })) return true;
+  if (!(date instanceof Date)) {
+    return false;
+  }
+
+  return Object.keys(termDates).some(term => {
+    return isWithinInterval(date, {
+      start: new Date(termDates[term][0]),
+      end: new Date(termDates[term][1]),
+    });
   });
-  return false;
 };
 
 export const getCurrentWeek = createSelector(

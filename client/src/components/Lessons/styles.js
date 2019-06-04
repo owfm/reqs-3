@@ -12,3 +12,5 @@ export const SessionGrid = styled.div`
   display: grid;
   grid-gap: 5px;
 `;
+
+export const Holiday = styled.div``;

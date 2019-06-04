@@ -7,7 +7,7 @@ import { OPEN_REQUISITION } from "actions/modalTypes";
 
 import emitSnackbar from "actions/snackbar";
 
-import SessionItem from "components/styles/SessionItem";
+import { SessionItem } from "components/styles/SessionItem";
 
 const ReqMini = ({ req, lesson, openModal }) => {
   if (!req || !lesson) return null;

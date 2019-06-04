@@ -6,7 +6,7 @@ import { createSingleReq } from "actions/req";
 import { openModal } from "actions/ui";
 import { OPEN_REQUISITION } from "actions/modalTypes";
 
-import SessionItem from "components/styles/SessionItem";
+import { SessionItem } from "components/styles/SessionItem";
 
 const LessonMini = ({ lesson, createNewReqFromLessonId, openModal }) => {
   const createReq = async () => {

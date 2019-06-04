@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash.isempty";
+import getDay from "date-fns/getDay";
+import Typography from "@material-ui/core/Typography";
 
 import * as styles from "./styles";
 
@@ -9,6 +11,7 @@ import { fetchReqs } from "actions/req";
 import { fetchSingleSchool } from "actions/schools";
 
 import { getErrorMessage, getIsFetching } from "reducers";
+import { getDatesOfCurrentIsoWeek } from "reducers/ui";
 import { getSessionIdsForCurrentWeek } from "selectors";
 
 import requireAuth from "components/auth/requireAuth";
@@ -17,7 +20,8 @@ import ReqMini from "components/Lessons/ReqMini";
 import DatePicker from "components/Lessons/DatePicker";
 import PeriodRow from "components/Lessons/PeriodRow";
 import DayHeader from "components/Lessons/DayHeader";
-import { getHolidayDatesForSchool } from "../../selectors";
+import { SessionItem } from "components/styles/SessionItem";
+import { getHolidayDatesForCurrentWeek } from "../../selectors";
 
 const Lessons = ({
   lessonIds = [],
@@ -45,6 +49,10 @@ const Lessons = ({
     fetchSchool("5cf1036d92d4dc378f0a43e6");
   }, []);
 
+  if (fetchingReqs || fetchingLessons) {
+    return <p>Loading...</p>;
+  }
+
   const LessonSessions = lessonIds.map(lessonId => (
     <LessonMini key={lessonId} lessonId={lessonId} />
   ));
@@ -53,9 +61,15 @@ const Lessons = ({
     <ReqMini key={reqId} reqId={reqId} />
   ));
 
-  if (fetchingReqs || fetchingLessons) {
-    return <p>Loading...</p>;
-  }
+  const Holidays = holidayDates.map(date => (
+    <>
+      <SessionItem period={1} day={`${getDay(date)}`}>
+        <Typography variant={"h6"} align="center">
+          Holiday
+        </Typography>
+      </SessionItem>
+    </>
+  ));
 
   return (
     <>
@@ -74,6 +88,7 @@ const Lessons = ({
         <div />
         <PeriodRow />
         <DayHeader />
+        {Holidays}
         {ReqSessions}
         {LessonSessions}{" "}
       </styles.MainGrid>
@@ -95,8 +110,8 @@ const mapStateToProps = state => {
   return {
     lessonIds,
     reqIds,
-    currentWeek: state.ui.currentTimetableWeek,
-    holidayDates: getHolidayDatesForSchool(state),
+    datesOfCurrentIsoWeek: getDatesOfCurrentIsoWeek(state),
+    holidayDates: getHolidayDatesForCurrentWeek(state),
     lessonError: getErrorMessage(state, "lessons"),
     reqsError: getErrorMessage(state, "reqs"),
     fetchingLessons: getIsFetching(state, "lessons"),
