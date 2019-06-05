@@ -71,14 +71,10 @@ export function createSingleReq(requisition) {
 
     // get date of current req
     const datesOfCurrentWeek = getDatesOfCurrentIsoWeek(getState());
-    console.log(datesOfCurrentWeek);
     // get lesson this requisition being called with
     const lesson = getState().entitiesById.lessons[requisition.lesson];
-    console.log("lesson in createSingleReq function:");
-    console.log(lesson);
 
     const date = datesOfCurrentWeek[getWeekdayIndexOfNamedWeekday(lesson.day)];
-    console.log("Date in createSingleReq function: " + date);
     // MAYBE BETTER: HAVE COMPONENT CALLING CREATESINGLEREQ ASSIGN DATE?
 
     return fetch("api/v1/reqs", {
@@ -90,6 +86,7 @@ export function createSingleReq(requisition) {
       .then(response => response.json())
       .then(json => {
         dispatch(createReqSuccess(normalize(json.data, schemas.reqs)));
+        console.log("Date from returning Req: " + json.data.date);
         return json.data;
       })
       .catch(error => {

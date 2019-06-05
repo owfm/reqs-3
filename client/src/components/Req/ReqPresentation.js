@@ -10,6 +10,8 @@ import {
   Divider,
   List,
 } from "semantic-ui-react";
+import { getFormattedDistanceToDateToNow } from "utils/dateUtils";
+
 import { ReqPageContainer } from "./styles";
 
 const styles = {
@@ -39,10 +41,9 @@ const ReqPresentation = ({
           <List.Icon name="calendar outline" />
           <List.Content>{`${format(
             new Date(requisition.date),
-            "cccc MMM Mo"
-          )} (in ${formatDistance(
-            new Date(requisition.date),
-            new Date()
+            "iii do LLL"
+          )} (${getFormattedDistanceToDateToNow(
+            new Date(requisition.date)
           )})`}</List.Content>
         </List.Item>
         <List.Item>

@@ -20,7 +20,7 @@ const ReqMini = ({ req, lesson, openModal }) => {
         onClick={() =>
           openModal({
             modalType: OPEN_REQUISITION,
-            title: req.title,
+            title: req.title || "[No title]",
             meta: { id: req._id, existingRequisition: true },
           })
         }
