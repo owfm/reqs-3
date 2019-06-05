@@ -13,4 +13,29 @@ export const SessionGrid = styled.div`
   grid-gap: 5px;
 `;
 
-export const Holiday = styled.div``;
+export const HeaderWrapper = styled.div`
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
+export const DayName = styled.div`
+font-size: 20px;
+height: 30px;
+width: 30px;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 100%; /* may require vendor prefixes */
+  background: ${props => (props.highlighted ? "black" : "white")};
+  color: ${props => (props.highlighted ? "white" : "black")};
+  font-weight: ${props => (props.highlighted ? "bold" : "normal")}
+}
+`;
+
+export const HeaderDate = styled.div`
+  text-align: center;
+  font-weight: ${props => (props.today ? "bold" : "normal")};
+`;

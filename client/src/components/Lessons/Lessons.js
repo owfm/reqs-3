@@ -3,7 +3,11 @@ import { connect } from "react-redux";
 import isEmpty from "lodash.isempty";
 import getDay from "date-fns/getDay";
 import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
 
+import Button from "@material-ui/core/Button";
+
+import Refresh from "@material-ui/icons/Refresh";
 import * as styles from "./styles";
 
 import { fetchLessons } from "actions/lessons";
@@ -53,6 +57,8 @@ const Lessons = ({
     return <p>Loading...</p>;
   }
 
+  console.log(holidayDates);
+
   const LessonSessions = lessonIds.map(lessonId => (
     <LessonMini key={lessonId} lessonId={lessonId} />
   ));
@@ -71,18 +77,22 @@ const Lessons = ({
     </>
   ));
 
+  // BUG WHY IS THIS FETCHING A HOLIDAY TODAY?
+
   return (
     <>
-      <button
-        onClick={() => {
-          fetchLessons();
-          fetchReqs();
-          fetchSchool("5cf03b50b1de672505fe2592");
-        }}
-      >
-        ReFetch
-      </button>
-      <DatePicker />
+      <styles.HeaderWrapper>
+        <DatePicker />
+        <IconButton>
+          <Refresh
+            onClick={() => {
+              fetchLessons();
+              fetchReqs();
+              fetchSchool("5cf03b50b1de672505fe2592");
+            }}
+          />
+        </IconButton>
+      </styles.HeaderWrapper>
       <styles.MainGrid periods={6}>
         {/* empty div below is top left corner box of this grid */}
         <div />

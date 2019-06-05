@@ -1,11 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
-import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
+import * as styles from "./styles";
+
 import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
+import Today from "@material-ui/icons/Today";
+
 import format from "date-fns/format";
 import isSameDay from "date-fns/isSameDay";
-import { getFormattedDistanceToDateToNow } from "utils/dateUtils";
 import { getDatesOfCurrentIsoWeek, getCurrentDate } from "reducers/ui";
 import { setCurrentDate } from "actions/date";
 
@@ -18,20 +20,25 @@ const DayHeader = ({ datesOfCurrentIsoWeek, setCurrentDate, currentDate }) => {
     const renderingDate = datesOfCurrentIsoWeek[index + 1];
 
     return (
-      <Paper
-        elevation={isSameDay(currentDate, renderingDate) ? "5" : "0"}
-        onClick={() => setCurrentDate(renderingDate)}
-        key={`${day}`}
-      >
-        <Box textAlign={"center"}>
-          <Typography variant="h6">
-            {format(datesOfCurrentIsoWeek[index + 1], "eee dd-MM")}
-          </Typography>
-          <Typography variant="caption">
-            {getFormattedDistanceToDateToNow(datesOfCurrentIsoWeek[index + 1])}
-          </Typography>
-        </Box>
-      </Paper>
+      <Grid container direction="column" alignItems="center" justify="center">
+        <Grid item>
+          <Grid container direction="row" alignItems="center">
+            <Grid item>
+              <styles.DayName
+                highlighted={isSameDay(currentDate, renderingDate)}
+              >
+                {format(renderingDate, "EEEEE")}
+              </styles.DayName>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid item>
+          <styles.HeaderDate today={isSameDay(new Date(), renderingDate)}>
+            {format(renderingDate, "LLL io")}{" "}
+          </styles.HeaderDate>
+        </Grid>
+      </Grid>
     );
   });
 };
