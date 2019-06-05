@@ -2,8 +2,8 @@ import { combineReducers } from "redux";
 import * as actions from "actions/types";
 import addWeeks from "date-fns/addWeeks";
 import addDays from "date-fns/addDays";
-import parseISO from "date-fns/parseISO";
-import parse from "date-fns/parse";
+import isFriday from "date-fns/isFriday";
+import isMonday from "date-fns/isMonday";
 
 import eachDayOfInterval from "date-fns/eachDayOfInterval";
 import startOfWeek from "date-fns/startOfWeek";
@@ -24,10 +24,18 @@ const currentDate = (state = { date: new Date(), error: null }, action) => {
       return { error: action.payload, date: null };
     case actions.JUMP_WEEKS:
       return { error: null, date: addWeeks(state.date, action.payload) };
+
+    // if Friday or Monday, skip weekend.
     case actions.FORWARD_ONE_DAY:
-      return { error: null, date: addDays(state.date, 1) };
+      return {
+        error: null,
+        date: addDays(state.date, isFriday(state.date) ? 3 : 1),
+      };
     case actions.BACKWARD_ONE_DAY:
-      return { error: null, date: addDays(state.date, -1) };
+      return {
+        error: null,
+        date: addDays(state.date, isMonday(state.date) ? -3 : -1),
+      };
 
     default:
       return state;

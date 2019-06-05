@@ -1,9 +1,14 @@
 import React from "react";
 import { Router, Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
+
+import { createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
+
 import store from "store";
 import history from "history/history";
-import CssBaseline from "@material-ui/core/CssBaseline";
+
 import Drawer from "components/Navigation/Drawer";
 import TopBar from "components/Navigation/TopBar";
 import LoadingBar from "components/Navigation/LoadingBar";
@@ -23,16 +28,30 @@ import "react-dates/lib/css/_datepicker.css";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 
-import UserSelector from "components/userSelector";
+import pink from "@material-ui/core/colors/pink";
+
+// import UserSelector from "components/userSelector";
+
+const primary = pink[500]; // #F44336
+
+const theme = createMuiTheme({
+  palette: {
+    main: {
+      primary,
+    },
+  },
+  status: {
+    danger: "orange",
+  },
+});
 
 function App() {
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <Provider store={store}>
-        <Router history={history}>
-          <>
+    <ThemeProvider theme={theme}>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <Provider store={store}>
+          <Router history={history}>
             <CssBaseline>
-              {/* <ThemeProvider theme={theme}> */}
               <LoadingBar />
               <TopBar />
               <Drawer />
@@ -45,18 +64,16 @@ function App() {
                 <Route path="/signin" component={Signin} />
                 <Route path="/about" component={About} />
                 <Route path="/newschool" component={CreateSchool} />
-                {/* <Route path={`/reqs/:id`} component={Req} /> */}
                 <Route exact path={`/lessons/`} component={Lessons} />
                 <Route component={NotFound} />
               </Switch>
               <Snackbar />
-              <UserSelector />
-              {/* </ThemeProvider> */}
+              {/* <UserSelector /> */}
             </CssBaseline>
-          </>
-        </Router>
-      </Provider>
-    </MuiPickersUtilsProvider>
+          </Router>
+        </Provider>
+      </MuiPickersUtilsProvider>
+    </ThemeProvider>
   );
 }
 

@@ -29,7 +29,7 @@ width: 30px;
   text-align: center;
   vertical-align: middle;
   border-radius: 100%; /* may require vendor prefixes */
-  background: ${props => (props.highlighted ? "black" : "white")};
+  background: ${props => (props.highlighted ? "333" : "white")};
   color: ${props => (props.highlighted ? "white" : "black")};
   font-weight: ${props => (props.highlighted ? "bold" : "normal")}
 }
