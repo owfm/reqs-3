@@ -35,7 +35,7 @@ const DayHeader = ({ datesOfCurrentIsoWeek, setCurrentDate, currentDate }) => {
 
         <Grid item>
           <styles.HeaderDate today={isSameDay(new Date(), renderingDate)}>
-            {format(renderingDate, "LLL io")}{" "}
+            {format(renderingDate, "EE LLL io Y")}{" "}
           </styles.HeaderDate>
         </Grid>
       </Grid>

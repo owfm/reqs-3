@@ -57,8 +57,6 @@ const Lessons = ({
     return <p>Loading...</p>;
   }
 
-  console.log(holidayDates);
-
   const LessonSessions = lessonIds.map(lessonId => (
     <LessonMini key={lessonId} lessonId={lessonId} />
   ));

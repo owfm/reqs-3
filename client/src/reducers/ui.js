@@ -132,13 +132,13 @@ export const getDatesOfCurrentIsoWeek = state => {
 };
 
 // this function takes a weekday name and returns the index appropriate date from the array returned by getDatesOfCurrentIsoWeek
+const map = {
+  Mon: 1,
+  Tue: 2,
+  Wed: 3,
+  Thu: 4,
+  Fri: 5,
+};
 export const getWeekdayIndexOfNamedWeekday = weekday => {
-  const map = {
-    Mon: 2,
-    Tue: 3,
-    Wed: 4,
-    Thu: 5,
-    Fri: 6,
-  };
   return map[weekday];
 };
