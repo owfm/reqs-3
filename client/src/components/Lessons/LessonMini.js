@@ -1,12 +1,15 @@
-import React from "react";
-import { Card } from "semantic-ui-react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
+import AddCircleOutline from "@material-ui/icons/AddCircleOutline";
+import AddCircle from "@material-ui/icons/AddCircle";
+
 import emitSnackbar from "actions/snackbar";
 import { createSingleReq } from "actions/req";
 import { openModal } from "actions/ui";
 import { OPEN_REQUISITION } from "actions/modalTypes";
 
 import { SessionItem } from "components/styles/SessionItem";
+import { Paper, Grid, Typography } from "@material-ui/core";
 
 const LessonMini = ({ lesson, createNewReqFromLessonId, openModal }) => {
   const createReq = async () => {
@@ -23,14 +26,29 @@ const LessonMini = ({ lesson, createNewReqFromLessonId, openModal }) => {
     }
   };
 
+  const [hover, setHover] = useState(false);
+
   return (
     <SessionItem day={lesson.day} period={lesson.period}>
-      <Card
-        fluid
+      <Paper
+        style={hover ? hoverStyle : null}
+        onMouseOver={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
         onClick={() => createReq()}
-        header={lesson.classgroup}
-        meta={`${lesson.room} ${lesson.week + lesson.day + lesson.period}`}
-      />
+      >
+        <Grid container alignItems="center" justify="center" direction="column">
+          <Grid item>
+            <Typography variant={"h6"}>{lesson.classgroup}</Typography>
+          </Grid>
+          <Grid item>
+            <Typography varient={"body"}>
+              {`${lesson.room} ${lesson.week + lesson.day + lesson.period}`}
+            </Typography>
+          </Grid>
+          <Grid>{hover ? <AddCircle /> : <AddCircleOutline />}</Grid>
+          <Grid />
+        </Grid>
+      </Paper>
     </SessionItem>
   );
 };
@@ -55,3 +73,5 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(LessonMini);
+
+const hoverStyle = { color: "red", cursor: "pointer" };

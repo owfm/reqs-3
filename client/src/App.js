@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
+// import CssBaseline from "@material-ui/core/CssBaseline";
 
 import store from "store";
 import history from "history/history";
@@ -28,52 +28,51 @@ import "react-dates/lib/css/_datepicker.css";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 
-import pink from "@material-ui/core/colors/pink";
-
 // import UserSelector from "components/userSelector";
-
-const primary = pink[500]; // #F44336
 
 const theme = createMuiTheme({
   palette: {
-    main: {
-      primary,
+    primary: {
+      light: "#757ce8",
+      main: "#3f50b5",
+      dark: "#002884",
+      contrastText: "#fff",
+    },
+    secondary: {
+      light: "#ff7961",
+      main: "#f44336",
+      dark: "#ba000d",
+      contrastText: "#000",
     },
   },
-  status: {
-    danger: "orange",
-  },
 });
-
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Provider store={store}>
-          <Router history={history}>
-            <CssBaseline>
-              <LoadingBar />
-              <TopBar />
-              <Drawer />
-              <ModalWrapper />
-              <Switch>
-                <Route path="/" exact component={Welcome} />
-                <Route path="/dashboard" component={Dashboard} />
-                <Route path="/signup" component={Signup} />
-                <Route path="/signout" component={Signout} />
-                <Route path="/signin" component={Signin} />
-                <Route path="/about" component={About} />
-                <Route path="/newschool" component={CreateSchool} />
-                <Route exact path={`/lessons/`} component={Lessons} />
-                <Route component={NotFound} />
-              </Switch>
+    <Provider store={store}>
+      <Router history={history}>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <ThemeProvider theme={theme}>
+            <LoadingBar />
+            <TopBar />
+            <Drawer />
+            <ModalWrapper />
+            <Switch>
+              <Route path="/" exact component={Welcome} />
+              <Route path="/dashboard" component={Dashboard} />
+              <Route path="/signup" component={Signup} />
+              <Route path="/signout" component={Signout} />
+              <Route path="/signin" component={Signin} />
+              <Route path="/about" component={About} />
+              <Route path="/newschool" component={CreateSchool} />
+              <Route exact path={`/lessons/`} component={Lessons} />
+              <Route component={NotFound} />
               <Snackbar />
               {/* <UserSelector /> */}
-            </CssBaseline>
-          </Router>
-        </Provider>
-      </MuiPickersUtilsProvider>
-    </ThemeProvider>
+            </Switch>
+          </ThemeProvider>
+        </MuiPickersUtilsProvider>
+      </Router>
+    </Provider>
   );
 }
 
