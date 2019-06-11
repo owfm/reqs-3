@@ -2,30 +2,12 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import AddCircleOutline from "@material-ui/icons/AddCircleOutline";
 import AddCircle from "@material-ui/icons/AddCircle";
-
-import emitSnackbar from "actions/snackbar";
-import { createSingleReq } from "actions/req";
-import { openModal } from "actions/ui";
-import { OPEN_REQUISITION } from "actions/modalTypes";
-
 import { SessionItem } from "components/styles/SessionItem";
 import { Paper, Grid, Typography } from "@material-ui/core";
 
-const LessonMini = ({ lesson, createNewReqFromLessonId, openModal }) => {
-  const createReq = async () => {
-    try {
-      const requisition = await createNewReqFromLessonId(lesson._id);
-      emitSnackbar("New requisition created!");
-      openModal({
-        modalType: OPEN_REQUISITION,
-        title: `Submit New Requisition`,
-        meta: { id: requisition._id, existingRequisition: false },
-      });
-    } catch (error) {
-      emitSnackbar("Sorry, something went wrong.");
-    }
-  };
+import { createReqAndOpenModal } from "actions/req";
 
+const LessonMini = ({ lesson, onPaperClick }) => {
   const [hover, setHover] = useState(false);
 
   return (
@@ -34,7 +16,7 @@ const LessonMini = ({ lesson, createNewReqFromLessonId, openModal }) => {
         style={hover ? hoverStyle : null}
         onMouseOver={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
-        onClick={() => createReq()}
+        onClick={() => onPaperClick()}
       >
         <Grid container alignItems="center" justify="center" direction="column">
           <Grid item>
@@ -53,12 +35,10 @@ const LessonMini = ({ lesson, createNewReqFromLessonId, openModal }) => {
   );
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { lessonId } = ownProps;
   return {
-    openModal: params => dispatch(openModal(params)),
-    emitSnackbar: message => dispatch(emitSnackbar(message)),
-    createNewReqFromLessonId: lessonId =>
-      dispatch(createSingleReq({ lesson: lessonId })),
+    onPaperClick: () => dispatch(createReqAndOpenModal({ lesson: lessonId })),
   };
 };
 

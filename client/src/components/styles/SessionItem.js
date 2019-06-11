@@ -33,6 +33,7 @@ export const HolidayItem = styled.div`
 `;
 
 export const SessionItem = styled.div`
+align-items: stretch;
   grid-column-start: ${props => dayToColMap[props.day]}
   grid-row-start: ${props => periodToRowMap[props.period]}
 `;

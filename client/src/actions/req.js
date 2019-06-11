@@ -7,6 +7,10 @@ import {
   getDatesOfCurrentIsoWeek,
   getWeekdayIndexOfNamedWeekday,
 } from "reducers/ui";
+import { openModal } from "actions/ui";
+import emitSnackbar from "actions/snackbar";
+
+import { OPEN_REQUISITION } from "actions/modalTypes";
 
 const requestDeleteReq = id => {
   return {
@@ -209,3 +213,21 @@ export function restoreDeletedReq() {
     }
   };
 }
+
+export const createReqAndOpenModal = lessonId => {
+  return async dispatch => {
+    try {
+      const requisition = await dispatch(createSingleReq(lessonId));
+      // emitSnackbar("New requisition created!");
+      dispatch(
+        openModal({
+          modalType: OPEN_REQUISITION,
+          title: `Submit New Requisition`,
+          meta: { id: requisition._id, existingRequisition: false },
+        })
+      );
+    } catch (error) {
+      dispatch(emitSnackbar("Sorry, something went wrong."));
+    }
+  };
+};

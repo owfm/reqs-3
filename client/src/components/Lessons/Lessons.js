@@ -5,8 +5,6 @@ import getDay from "date-fns/getDay";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 
-import Button from "@material-ui/core/Button";
-
 import Refresh from "@material-ui/icons/Refresh";
 import * as styles from "./styles";
 
@@ -81,14 +79,14 @@ const Lessons = ({
     <>
       <styles.HeaderWrapper>
         <DatePicker />
-        <IconButton>
-          <Refresh
-            onClick={() => {
-              fetchLessons();
-              fetchReqs();
-              fetchSchool("5cf03b50b1de672505fe2592");
-            }}
-          />
+        <IconButton
+          onClick={() => {
+            fetchLessons();
+            fetchReqs();
+            fetchSchool("5cf03b50b1de672505fe2592");
+          }}
+        >
+          <Refresh />
         </IconButton>
       </styles.HeaderWrapper>
       <styles.MainGrid periods={6}>

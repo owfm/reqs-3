@@ -1,5 +1,4 @@
 import React from "react";
-import formatDistance from "date-fns/formatDistance";
 import format from "date-fns/format";
 import {
   Input,

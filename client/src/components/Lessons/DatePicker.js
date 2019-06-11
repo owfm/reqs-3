@@ -30,21 +30,18 @@ const datePicker = ({
     <div>
       <Icon
         size="large"
-        basic
         circular
         onClick={() => jumpWeeks(-1)}
         name="angle double left"
       />
       <Icon
         size="large"
-        basic
         circular
         onClick={() => backwardOneDay()}
         name="angle left"
       />
       <Icon
         size="large"
-        basic
         circular
         onClick={() => setCurrentDate(new Date())}
         name="home"
@@ -52,14 +49,12 @@ const datePicker = ({
 
       <Icon
         size="large"
-        basic
         circular
         onClick={() => forwardOneDay()}
         name="angle right"
       />
       <Icon
         size="large"
-        basic
         circular
         onClick={() => jumpWeeks(+1)}
         name="angle double right"

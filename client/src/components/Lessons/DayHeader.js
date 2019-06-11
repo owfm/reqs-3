@@ -19,7 +19,13 @@ const DayHeader = ({ datesOfCurrentIsoWeek, setCurrentDate, currentDate }) => {
     if (isSunday(currentDay) || isSaturday(currentDay)) return null;
 
     return (
-      <Grid container direction="column" alignItems="center" justify="center">
+      <Grid
+        key={currentDay}
+        container
+        direction="column"
+        alignItems="center"
+        justify="center"
+      >
         <Grid item>
           <Grid container direction="row" alignItems="center">
             <Grid item>
