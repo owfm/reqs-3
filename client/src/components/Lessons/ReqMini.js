@@ -1,4 +1,4 @@
-import ReqMiniPresentation from "components/ReqMiniPresentation";
+import ReqMiniPresentation from "components/Lessons/ReqMiniPresentation";
 import { connect } from "react-redux";
 import { openModal } from "actions/ui";
 import getIsFetching from "reducers";
