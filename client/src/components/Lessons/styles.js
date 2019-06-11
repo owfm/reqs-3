@@ -3,6 +3,8 @@ import styled from "styled-components";
 export const MainGrid = styled.div`
   padding: 20px;
   display: grid;
+  justify-items: stretch;
+  align-items: stretch;
   grid-template-rows: auto repeat(${props => props.periods.length + 1}, auto);
   grid-gap: 10px;
   grid-template-columns: auto repeat(5, 1fr);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { OPEN_REQUISITION } from "actions/modalTypes";
 import DoneOutline from "@material-ui/icons/DoneOutline";
 import Warning from "@material-ui/icons/Warning";
@@ -9,8 +9,16 @@ import { Paper, Grid, Typography } from "@material-ui/core";
 const ReqMiniPresentation = ({ req, lesson, openModal }) => {
   if (!req || !lesson) return null;
 
+  const [hover, setHover] = useState(false);
+
   return (
-    <SessionItem day={lesson.day} period={lesson.period}>
+    <SessionItem
+      style={hover ? hoverStyle : null}
+      onMouseOver={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      day={lesson.day}
+      period={lesson.period}
+    >
       <Paper
         onClick={() =>
           openModal({
@@ -46,3 +54,7 @@ const ReqMiniPresentation = ({ req, lesson, openModal }) => {
 };
 
 export default ReqMiniPresentation;
+
+const hoverStyle = {
+  cursor: "pointer",
+};
