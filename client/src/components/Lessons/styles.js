@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Paper from "@material-ui/core/Paper";
 
 export const MainGrid = styled.div`
   padding: 20px;
@@ -40,4 +41,8 @@ width: 30px;
 export const HeaderDate = styled.div`
   text-align: center;
   font-weight: ${props => (props.today ? "bold" : "normal")};
+`;
+
+export const SessionPaper = styled(Paper)`
+  height: 80px;
 `;

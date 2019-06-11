@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { OPEN_REQUISITION } from "actions/modalTypes";
-import DoneOutline from "@material-ui/icons/DoneOutline";
-import Warning from "@material-ui/icons/Warning";
-
+import * as styles from "./styles";
 import { SessionItem } from "components/styles/SessionItem";
-import { Paper, Grid, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 
 const ReqMiniPresentation = ({ req, lesson, openModal }) => {
   if (!req || !lesson) return null;
@@ -19,7 +17,7 @@ const ReqMiniPresentation = ({ req, lesson, openModal }) => {
       day={lesson.day}
       period={lesson.period}
     >
-      <Paper
+      <styles.SessionPaper
         onClick={() =>
           openModal({
             modalType: OPEN_REQUISITION,
@@ -28,27 +26,18 @@ const ReqMiniPresentation = ({ req, lesson, openModal }) => {
           })
         }
       >
-        <Grid container direction="column" alignItems="center" justify="center">
+        <Grid container alignItems="center" justify="center" direction="column">
           <Grid item>
-            <Grid container spacing={3} direction="row" alignItems="center">
-              <Typography variant={"h6"}>
-                {req.title || "[No title]"}
-              </Typography>
-              {req.isDone && (
-                <Grid item>
-                  <DoneOutline style={{ color: "green" }} />
-                </Grid>
-              )}
-              {req.hasIssue && (
-                <Grid item>
-                  <Warning style={{ color: "red" }} />
-                </Grid>
-              )}
-            </Grid>
+            <Typography variant={"h6"}>{req.title || "[No title]"}</Typography>
           </Grid>
-          <Grid item>{`${lesson.classgroup} ${lesson.room}`}</Grid>
+          <Grid item>
+            <Typography varient={"body"}>
+              {`${lesson.room} ${lesson.week + lesson.day + lesson.period}`}
+            </Typography>
+          </Grid>
+          <Grid />
         </Grid>
-      </Paper>
+      </styles.SessionPaper>
     </SessionItem>
   );
 };
