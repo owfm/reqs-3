@@ -1,67 +1,10 @@
-import React, { useEffect } from "react";
+import DatePickerPresentation from "./DatePickerPresentation";
 import { connect } from "react-redux";
-import { Icon } from "semantic-ui-react";
 import { setCurrentDate, jumpWeeks } from "actions/date";
 import { getCurrentDate } from "reducers/ui";
 import { getDatesOfCurrentIsoWeek } from "../../reducers/ui";
 import { forwardOneDay } from "../../actions/date";
 import { backwardOneDay } from "../../actions/date";
-
-const datePicker = ({
-  currentDate,
-  setCurrentDate,
-  jumpWeeks,
-  forwardOneDay,
-  backwardOneDay,
-}) => {
-  useEffect(() => {
-    if (!currentDate) {
-      setCurrentDateToToday();
-    }
-  });
-
-  const setCurrentDateToToday = () => {
-    setCurrentDate(new Date());
-  };
-
-  if (!currentDate) return null;
-
-  return (
-    <div>
-      <Icon
-        size="large"
-        circular
-        onClick={() => jumpWeeks(-1)}
-        name="angle double left"
-      />
-      <Icon
-        size="large"
-        circular
-        onClick={() => backwardOneDay()}
-        name="angle left"
-      />
-      <Icon
-        size="large"
-        circular
-        onClick={() => setCurrentDate(new Date())}
-        name="home"
-      />
-
-      <Icon
-        size="large"
-        circular
-        onClick={() => forwardOneDay()}
-        name="angle right"
-      />
-      <Icon
-        size="large"
-        circular
-        onClick={() => jumpWeeks(+1)}
-        name="angle double right"
-      />
-    </div>
-  );
-};
 
 const mapStateToProps = state => {
   return {
@@ -80,4 +23,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(datePicker);
+)(DatePickerPresentation);

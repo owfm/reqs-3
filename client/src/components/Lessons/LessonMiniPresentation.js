@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useTheme } from "@material-ui/styles";
+import AddCircle from "@material-ui/icons/AddCircle";
+
 import AddCircleOutline from "@material-ui/icons/AddCircleOutline";
 import { SessionItem } from "components/styles/SessionItem";
 import { Grid, Typography, Button } from "@material-ui/core";
@@ -7,10 +10,16 @@ import * as styles from "./styles";
 const LessonMiniPresentation = ({ lesson, onPaperClick }) => {
   const [hover, setHover] = useState(false);
 
+  const theme = useTheme();
+
   return (
     <SessionItem day={lesson.day} period={lesson.period}>
       <styles.SessionPaper
-        style={hover ? hoverStyle : null}
+        style={
+          hover
+            ? { color: theme.palette.primary.main, cursor: "pointer" }
+            : null
+        }
         onMouseOver={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
       >
@@ -23,19 +32,7 @@ const LessonMiniPresentation = ({ lesson, onPaperClick }) => {
               {`${lesson.room} ${lesson.week + lesson.day + lesson.period}`}
             </Typography>
           </Grid>
-          <Grid>
-            {hover ? (
-              <Button
-                onClick={() => onPaperClick()}
-                size="small"
-                style={{ color: "red" }}
-              >
-                Add Req
-              </Button>
-            ) : (
-              <AddCircleOutline />
-            )}
-          </Grid>
+          <Grid>{hover ? <AddCircle /> : <AddCircleOutline />}</Grid>
           <Grid />
         </Grid>
       </styles.SessionPaper>
@@ -44,5 +41,3 @@ const LessonMiniPresentation = ({ lesson, onPaperClick }) => {
 };
 
 export default LessonMiniPresentation;
-
-const hoverStyle = { color: "red" };
