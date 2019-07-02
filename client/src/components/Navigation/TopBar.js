@@ -9,7 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import { OPEN_LOGIN } from "actions/modalTypes";
 import { openModal, openDrawer } from "actions/ui";
-import { signout } from "actions/auth";
+import { logout } from "actions/auth";
 import history from "history/history";
 
 const useStyles = makeStyles(theme => ({
@@ -71,7 +71,7 @@ const mapStateToProps = ({ auth }) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    logout: () => dispatch(signout()),
+    logout: () => dispatch(logout()),
     openLoginModal: () => dispatch(openModal({ modalType: OPEN_LOGIN })),
     openDrawer: () => dispatch(openDrawer()),
   };

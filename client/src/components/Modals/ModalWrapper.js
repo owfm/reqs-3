@@ -1,10 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { closeModal } from "actions/ui";
-import { Modal, Button } from "semantic-ui-react";
+import { Modal } from "semantic-ui-react";
 import Req from "components/Req/Req";
-import Signin from "components/auth/Signin";
-import SignInButton from "../auth/SignInButton";
+import Login from "components/auth/Login";
 import * as types from "actions/modalTypes";
 
 const ModalWrapper = ({ open, modalType, title, closeModal, meta }) => {
@@ -13,15 +12,10 @@ const ModalWrapper = ({ open, modalType, title, closeModal, meta }) => {
   switch (modalType) {
     case types.OPEN_LOGIN: {
       return (
-        <Modal open={true} onClose={closeModal}>
-          <Modal.Header>Login</Modal.Header>
+        <Modal open={true} size="tiny" onClose={closeModal}>
           <Modal.Content>
-            <Signin />
+            <Login />
           </Modal.Content>
-          <Modal.Actions>
-            <Button onClick={() => closeModal()}>Cancel</Button>
-            <SignInButton />
-          </Modal.Actions>
         </Modal>
       );
     }
@@ -52,7 +46,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 const mapStateToProps = state => {
-  //   const { open, type, title, message } = state.ui;
   return { ...state.ui.modal };
 };
 

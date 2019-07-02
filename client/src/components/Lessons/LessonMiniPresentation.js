@@ -15,6 +15,7 @@ const LessonMiniPresentation = ({ lesson, onPaperClick }) => {
   return (
     <SessionItem day={lesson.day} period={lesson.period}>
       <styles.SessionPaper
+        onClick={() => onPaperClick()}
         style={
           hover
             ? { color: theme.palette.primary.main, cursor: "pointer" }

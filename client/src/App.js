@@ -21,6 +21,7 @@ import Snackbar from "components/Snackbar";
 import CreateSchool from "components/CreateSchool/index";
 import ModalWrapper from "components/Modals/ModalWrapper";
 import Dashboard from "components/Dashboard/Dashboard";
+import StickyFooter from "components/StickyFooter";
 
 import "react-dates/initialize";
 import "react-dates/lib/css/_datepicker.css";
@@ -69,6 +70,7 @@ function App() {
               <Snackbar />
               {/* <UserSelector /> */}
             </Switch>
+            <StickyFooter />
           </ThemeProvider>
         </MuiPickersUtilsProvider>
       </Router>
