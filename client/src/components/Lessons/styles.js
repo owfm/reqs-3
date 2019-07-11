@@ -34,8 +34,7 @@ export const DayName = styled.div`
   border-radius: 100%; /* may require vendor prefixes */
   background: ${props =>
     props.highlighted ? props.theme.palette.primary.main : "white"};
-  color: ${props =>
-    props.highlighted ? props.theme.palette.secondary.main : "black"};
+  color: ${props => (props.highlighted ? "white" : "black")};
   font-weight: ${props => (props.highlighted ? "bold" : "normal")};
 `;
 
