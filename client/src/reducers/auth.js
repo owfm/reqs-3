@@ -1,4 +1,4 @@
-import { AUTH_USER, AUTH_ERROR } from "actions/types";
+import * as actions from "actions/types";
 
 const defaultUser = {
   admin: false,
@@ -27,14 +27,20 @@ const INITIAL_STATE_LOGGED_IN = {
 
 export default function(state = INITIAL_STATE_LOGGED_IN, action) {
   switch (action.type) {
-    case AUTH_USER:
+    case actions.AUTH_REQUEST:
       return {
         ...state,
+        loading: true,
+      };
+    case actions.AUTH_USER:
+      return {
+        ...state,
+        loading: false,
         authenticated: action.payload.token,
         user: action.payload.user || null,
       };
-    case AUTH_ERROR:
-      return { ...state, errorMessage: action.payload };
+    case actions.AUTH_ERROR:
+      return { ...state, loading: false, errorMessage: action.payload };
     default:
       return state;
   }

@@ -46,6 +46,7 @@ const Login = ({ handleSubmit, login, pristine, reset, submitting }) => {
 
   const onSubmit = async formProps => {
     try {
+      console.log(formProps);
       await login(formProps);
       history.push("/dashboard");
     } catch (error) {}

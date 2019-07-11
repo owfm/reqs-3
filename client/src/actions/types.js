@@ -76,6 +76,7 @@ export const CLOSE_DRAWER = "CLOSE_DRAWER";
 export const EMIT_SNACKBAR = "EMIT_SNACKBAR";
 export const CLOSE_SNACKBAR = "CLOSE_SNACKBAR";
 
+export const AUTH_REQUEST = "AUTH_REQUEST";
 export const AUTH_USER = "auth_user";
 export const AUTH_ERROR = "auth_error";
 
@@ -85,3 +86,5 @@ export const JUMP_WEEKS = "JUMP_WEEKS";
 
 export const FORWARD_ONE_DAY = "FORWARD_ONE_DAY";
 export const BACKWARD_ONE_DAY = "BACKWARD_ONE_DAY";
+
+export const SET_LOADING = "SET_LOADING";

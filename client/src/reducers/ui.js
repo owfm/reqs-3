@@ -44,6 +44,7 @@ const currentDate = (state = { date: new Date(), error: null }, action) => {
 
 const progressBarOpen = (state = false, action) => {
   switch (action.type) {
+    case actions.AUTH_REQUEST:
     case actions.CREATE_REQS_REQUEST:
     case actions.FETCH_REQS_REQUEST:
     case actions.DELETE_REQS_REQUEST:
@@ -58,6 +59,8 @@ const progressBarOpen = (state = false, action) => {
     case actions.UPDATE_LESSONS_REQUEST:
     case action.RESTORE_DELETED_REQ_REQUEST:
       return true;
+    case actions.AUTH_USER:
+    case actions.AUTH_ERROR:
     case actions.CREATE_REQS_SUCCESS:
     case actions.FETCH_REQS_SUCCESS:
     case actions.DELETE_REQS_SUCCESS:

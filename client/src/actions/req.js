@@ -217,8 +217,8 @@ export function restoreDeletedReq() {
 export const createReqAndOpenModal = lessonId => {
   return async dispatch => {
     try {
+      dispatch(setLoading({ entity: "lesson", id: lessonId, loading: true }));
       const requisition = await dispatch(createSingleReq(lessonId));
-      // emitSnackbar("New requisition created!");
       dispatch(
         openModal({
           modalType: OPEN_REQUISITION,
@@ -229,5 +229,13 @@ export const createReqAndOpenModal = lessonId => {
     } catch (error) {
       dispatch(emitSnackbar("Sorry, something went wrong."));
     }
+  };
+};
+
+export const setLoading = params => {
+  // expects entity, id, loading args
+  return {
+    type: actions.SET_LOADING,
+    ...params,
   };
 };

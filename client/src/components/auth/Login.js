@@ -33,7 +33,7 @@ export default connect(
   mapDispatchToProps
 )(
   reduxForm({
-    form: "MaterialUiForm", // a unique identifier for this form
+    form: "LoginForm", // a unique identifier for this form
     validate,
     // asyncValidate
   })(LoginPresentation)
