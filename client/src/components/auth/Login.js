@@ -1,6 +1,6 @@
 import { login } from "actions/auth";
 import { connect } from "react-redux";
-
+import { closeModal } from "actions/ui";
 import LoginPresentation from "./LoginPresentation";
 
 import { reduxForm } from "redux-form";
@@ -25,6 +25,7 @@ const validate = values => {
 const mapDispatchToProps = dispatch => {
   return {
     login: formProps => dispatch(login(formProps)),
+    closeModal: () => dispatch(closeModal()),
   };
 };
 

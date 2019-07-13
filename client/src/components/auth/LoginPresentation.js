@@ -15,6 +15,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { closeModal } from "../../actions/ui";
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -41,13 +42,20 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Login = ({ handleSubmit, login, pristine, reset, submitting }) => {
+const Login = ({
+  handleSubmit,
+  login,
+  closeModal,
+  pristine,
+  reset,
+  submitting,
+}) => {
   const classes = useStyles();
 
   const onSubmit = async formProps => {
     try {
-      console.log(formProps);
       await login(formProps);
+      closeModal();
       history.push("/dashboard");
     } catch (error) {}
   };
