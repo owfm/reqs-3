@@ -35,9 +35,7 @@ const mapStateToProps = state => {
   };
 };
 
-export default requireAuth(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(LessonsPresentation)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LessonsPresentation);

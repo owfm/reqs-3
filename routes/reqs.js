@@ -4,14 +4,14 @@ var passport = require("passport");
 
 var reqsController = require("../controllers/reqsController");
 
-const requireAuth = passport.authenticate("jwt", { session: false });
+const requireAuth = passport.authenticate("local", { session: false });
 
 router.get("/", reqsController.getAllReqs);
-router.get("/:id", reqsController.getReqById);
-router.post("/", reqsController.postNewReq);
-router.delete("/:id", reqsController.deleteSingleReq);
+router.get("/:id", requireAuth, reqsController.getReqById);
+router.post("/", requireAuth, reqsController.postNewReq);
+router.delete("/:id", requireAuth, reqsController.deleteSingleReq);
 // TODO delete this route
-router.delete("/", reqsController.deleteAllReqs);
+router.delete("/", requireAuth, reqsController.deleteAllReqs);
 
-router.put("/:id", reqsController.patchReq);
+router.put("/:id", requireAuth, reqsController.patchReq);
 module.exports = router;

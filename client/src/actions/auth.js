@@ -29,7 +29,7 @@ export const login = formProps => async dispatch => {
     const response = await axios.post("/api/v1/auth/login", formProps);
     dispatch({ type: actions.AUTH_USER, payload: response.data.data });
     dispatch(emitSnackbar("Logged in!"));
-    localStorage.setItem("token", response.data.data.token);
+    localStorage.setItem("authorization", response.data.data.token);
     localStorage.setItem("user", JSON.stringify(response.data.data.user));
   } catch (error) {
     dispatch({ type: actions.AUTH_ERROR, payload: error });

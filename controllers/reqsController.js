@@ -1,11 +1,12 @@
 var Req = require("../models/req");
 
 exports.getAllReqs = (request, response, next) => {
-  // const { school } = request.user;
+  console.log(request);
+  const { school } = request.user;
   // todo: filter by school
   // todo: filter by timeframe, need to decide how to handle pagination
 
-  Req.find({})
+  Req.find({ school })
     .populate("teacher")
     .populate({
       path: "lesson",
@@ -39,10 +40,18 @@ exports.getReqById = (request, response) => {
 exports.postNewReq = (request, response) => {
   // TODOcheck authorised to add req
   // TODO get submitting teacher id from authorisation header
+  try {
+    const { school } = request.user;
+  } catch (error) {
+    next("There seems to be a problem - we can't see your school.");
+  }
+
+  // todo validate req body.
 
   var newReq = new Req({
     ...request.body,
-    teacher: "5cd450445819b885d01f65d4",
+    teacher: request.user._id,
+    school,
     createdAt: Date.now(),
   });
 
