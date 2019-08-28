@@ -4,10 +4,12 @@ const bcrypt = require("bcrypt-nodejs");
 
 var UserSchema = new Schema({
   teacherCode: String,
+  fullName: { type: String, required: true },
   firstName: String,
   lastName: String,
-  email: String,
+  email: { type: String, unique: true, required: true },
   password: String,
+  staffCode: String,
   admin: { type: Boolean, default: false },
   school: { type: Schema.Types.ObjectId, ref: "School" },
   role: {

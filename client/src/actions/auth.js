@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as actions from "actions/types";
+import emitSnackbar from "actions/snackbar";
 
 export const signup = (formProps, callback) => async dispatch => {
   try {
@@ -27,10 +28,14 @@ export const login = formProps => async dispatch => {
     dispatch(loginRequest());
     const response = await axios.post("/api/v1/auth/login", formProps);
     dispatch({ type: actions.AUTH_USER, payload: response.data.data });
+    dispatch(emitSnackbar("Logged in!"));
     localStorage.setItem("token", response.data.data.token);
     localStorage.setItem("user", JSON.stringify(response.data.data.user));
   } catch (error) {
     dispatch({ type: actions.AUTH_ERROR, payload: error });
+    dispatch(
+      emitSnackbar("Sorry, there was a problem with your crediantials.")
+    );
   }
 };
 

@@ -4,7 +4,7 @@ import AddCircle from "@material-ui/icons/AddCircle";
 
 import AddCircleOutline from "@material-ui/icons/AddCircleOutline";
 import { SessionItem } from "components/styles/SessionItem";
-import { Grid, Typography, Button } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import * as styles from "./styles";
 
 const LessonMiniPresentation = ({ lesson, onPaperClick }) => {

@@ -22,6 +22,8 @@ try {
   next(error);
 }
 
+mongoose.set("useCreateIndex", true);
+
 // Anything that doesn't match the above, send back index.html
 app.use(morgan("combined"));
 app.use(cors());
@@ -46,13 +48,15 @@ app.get("*", function(req, res) {
   const index = path.join(__dirname, "client", "build", "index.html");
   res.sendFile(index);
 });
+
 // error handling
 app.use(function(error, req, res, next) {
   console.log(error);
-  res.status(500).send({
+  res.send({
     data: null,
     error: { message: error.message || "Somthing went wrong!" },
   });
+  return;
 });
 
 module.exports = app;

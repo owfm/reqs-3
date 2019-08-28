@@ -8,6 +8,12 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
+if (process.env.NODE_ENV !== "production") {
+  var PrettyError = require("pretty-error");
+  var pe = new PrettyError();
+  pe.start();
+}
+
 var app = require("../app");
 var debug = require("debug")("backend:server");
 var http = require("http");

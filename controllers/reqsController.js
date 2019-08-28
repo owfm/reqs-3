@@ -1,6 +1,10 @@
 var Req = require("../models/req");
 
 exports.getAllReqs = (request, response, next) => {
+  // const { school } = request.user;
+  // todo: filter by school
+  // todo: filter by timeframe, need to decide how to handle pagination
+
   Req.find({})
     .populate("teacher")
     .populate({

@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 var ReqSchema = new Schema({
   teacher: { type: Schema.Types.ObjectId, ref: "User" },
   lesson: { type: Schema.Types.ObjectId, ref: "Lesson" },
+  school: { type: Schema.Types.ObjectId, ref: "School" },
   draft: { type: Boolean, default: true },
   isDone: { type: Boolean, default: false },
   hasIssue: { type: Boolean, default: false },
