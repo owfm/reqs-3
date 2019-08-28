@@ -1,5 +1,7 @@
 var User = require("../models/user");
 
+// todo: when users are uploaded, the 'staff' array on the relevant school must be populated.
+
 exports.getAllUsers = async (request, response) => {
   try {
     const users = await User.find().populate("school");

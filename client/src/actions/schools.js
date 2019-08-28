@@ -79,6 +79,7 @@ export function fetchSingleSchool(id) {
       .then(handleErrors)
       .then(response => response.json())
       .then(json => {
+        localStorage.setItem("school", JSON.stringify(json));
         dispatch(fetchSchoolSuccess(normalize(json, schemas.school)));
         return json;
       })

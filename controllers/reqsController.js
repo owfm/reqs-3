@@ -1,20 +1,28 @@
 var Req = require("../models/req");
 
 exports.getAllReqs = (request, response, next) => {
-  console.log(request);
-  const { school } = request.user;
-  // todo: filter by school
+  let school = null;
+  try {
+    school = request.user.school;
+  } catch (error) {
+    response.status(400).json({
+      data: null,
+      errors:
+        "Something's wrong here; we can't find your school. Please speak to your admin person.",
+    });
+  }
+
   // todo: filter by timeframe, need to decide how to handle pagination
 
-  Req.find({ school })
+  Req.find({ school: school })
     .populate("teacher")
     .populate({
       path: "lesson",
-      populate: { path: "school teacher" },
+      populate: { path: "teacher" },
     })
     .exec(function(error, reqs) {
       if (error) {
-        next(error);
+        next(new Error("Something wen't wrong finding these reqs, sorry."));
       } else {
         response.json({ data: reqs, error: null });
       }
@@ -30,23 +38,28 @@ exports.getReqById = (request, response) => {
       if (error) {
         response
           .status(404)
-          .json({ error: new Error("Sorry, could't find that requisition.") });
+          .json({ error: new Error("Sorry, couldn't find that requisition.") });
       } else {
         response.json({ data: req });
       }
     });
 };
 
-exports.postNewReq = (request, response) => {
-  // TODOcheck authorised to add req
+exports.postNewReq = (request, response, next) => {
+  // TODO check authorised to add req
   // TODO get submitting teacher id from authorisation header
+  let school = null;
   try {
-    const { school } = request.user;
+    school = request.user.school;
   } catch (error) {
-    next("There seems to be a problem - we can't see your school.");
+    response.status(400).json({
+      data: null,
+      errors:
+        "Something's wrong here; we can't find your school. Please speak to your admin person.",
+    });
   }
 
-  // todo validate req body.
+  // TODO validate req body.
 
   var newReq = new Req({
     ...request.body,

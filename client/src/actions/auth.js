@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as actions from "actions/types";
+import { fetchSingleSchool } from "actions/schools";
 import emitSnackbar from "actions/snackbar";
 
 export const signup = (formProps, callback) => async dispatch => {
@@ -29,8 +30,10 @@ export const login = formProps => async dispatch => {
     const response = await axios.post("/api/v1/auth/login", formProps);
     dispatch({ type: actions.AUTH_USER, payload: response.data.data });
     dispatch(emitSnackbar("Logged in!"));
-    localStorage.setItem("authorization", response.data.data.token);
+    localStorage.setItem("token", response.data.data.token);
     localStorage.setItem("user", JSON.stringify(response.data.data.user));
+    // also, fetch school of logged in person and put it in localstorage
+    fetchSingleSchool(response.data.data.user.school);
   } catch (error) {
     dispatch({ type: actions.AUTH_ERROR, payload: error });
     dispatch(
@@ -42,6 +45,7 @@ export const login = formProps => async dispatch => {
 export const logout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
+  localStorage.removeItem("school");
   return {
     type: actions.AUTH_USER,
     payload: "",

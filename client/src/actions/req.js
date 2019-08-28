@@ -1,5 +1,5 @@
 import * as actions from "actions/types";
-import { handleErrors } from "actions/utils";
+import { handleErrors, getAuthToken } from "actions/utils";
 import emitSnackbarWithTimeout from "./snackbar";
 import * as schemas from "schemas";
 import { normalize } from "normalizr";
@@ -35,9 +35,12 @@ const deleteReqsSuccess = id => {
 };
 
 export const deleteReq = id => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     dispatch(requestDeleteReq(id));
-    return await fetch(`api/v1/reqs/${id}`, { method: "DELETE" })
+    return await fetch(`api/v1/reqs/${id}`, {
+      method: "DELETE",
+      headers: { authorization: getAuthToken(getState) },
+    })
       .then(handleErrors)
       .then(() => {
         const undoable = true;
@@ -83,7 +86,10 @@ export function createSingleReq(requisition) {
 
     return fetch("api/v1/reqs", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        authorization: getAuthToken(getState),
+      },
       body: JSON.stringify({ ...requisition, date }),
     })
       .then(handleErrors)
@@ -122,11 +128,14 @@ const updateReqsFailure = payload => {
 };
 
 export function updateReq(requisition) {
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch(updateReqsRequest(requisition._id));
     return fetch(`api/v1/reqs/${requisition._id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        authorization: getAuthToken(getState),
+      },
       body: JSON.stringify(requisition),
     })
       .then(handleErrors)
@@ -162,11 +171,10 @@ const fetchReqsSuccess = reqs => {
 };
 
 export function fetchReqs(id = null) {
-  return dispatch => {
+  return (dispatch, getState) => {
     const url = id ? `api/v1/reqs/${id}` : `api/v1/reqs`;
-
     dispatch(fetchReqsRequest());
-    return fetch(url)
+    return fetch(url, { headers: { authorization: getAuthToken(getState) } })
       .then(handleErrors)
       .then(response => response.json())
       .then(json => {
