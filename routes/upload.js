@@ -1,5 +1,4 @@
 var express = require("express");
-const requireSignin = require("./auth");
 var router = express.Router();
 var passport = require("passport");
 
@@ -10,7 +9,12 @@ const requireAuth = passport.authenticate("jwt", { session: false });
 
 const uploadController = require("../controllers/uploadController");
 
-router.post("/timetable", upload.single("file"), uploadController.timetable);
+router.post(
+  "/timetable",
+  upload.single("file"),
+  requireAuth,
+  uploadController.timetable
+);
 router.post(
   "/createusers",
   upload.single("file"),

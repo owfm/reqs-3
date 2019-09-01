@@ -1,9 +1,9 @@
 var Lesson = require("../models/lesson");
 
 exports.getAllLessons = (request, response) => {
-  Lesson.find({})
+  Lesson.find({ school: request.user.school })
     .populate({ path: "teacher" })
-    .populate({ path: "school" })
+    // .populate({ path: "school" })
     .exec(function(error, lessons) {
       if (error) {
         response.status(500);

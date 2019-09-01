@@ -48,8 +48,6 @@ const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done) {
   // If it does, call 'done' with that other
   // otherwise, call done without a user object
 
-  console.log("inside jwt strategy");
-
   User.findById(payload.sub, function(err, user) {
     if (err) {
       console.error(err);
@@ -57,7 +55,6 @@ const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done) {
     }
 
     if (user) {
-      console.log("returning with user object");
       done(null, user);
     } else {
       done(null, false);

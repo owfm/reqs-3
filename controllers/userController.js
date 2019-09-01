@@ -1,10 +1,8 @@
 var User = require("../models/user");
 
-// todo: when users are uploaded, the 'staff' array on the relevant school must be populated.
-
 exports.getAllUsers = async (request, response) => {
   try {
-    const users = await User.find().populate("school");
+    const users = await User.find({ school: request.user.school });
     response.send({ data: users });
   } catch (err) {
     response.status(500).send({ data: null, errors: err });
@@ -37,4 +35,15 @@ exports.patchUser = (request, response) => {
       response.json({ data: user });
     }
   );
+};
+
+exports.deleteAllExceptOllie = (request, response, next) => {
+  User.deleteMany({ _id: { $ne: "5cf03e83b1de672505fe2597" } }, function(
+    error
+  ) {
+    if (error) {
+      next(error);
+    }
+  });
+  response.status(201).end();
 };

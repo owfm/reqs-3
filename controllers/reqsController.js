@@ -48,18 +48,15 @@ exports.getReqById = (request, response) => {
 exports.postNewReq = (request, response, next) => {
   // TODO check authorised to add req
   // TODO get submitting teacher id from authorisation header
-  let school = null;
+  let school;
   try {
-    school = request.user.school;
+    school = getSchoolFromRequest(request);
   } catch (error) {
     response.status(400).json({
       data: null,
-      errors:
-        "Something's wrong here; we can't find your school. Please speak to your admin person.",
+      errors: "Something's gone wrong; we can't find your school!",
     });
   }
-
-  // TODO validate req body.
 
   var newReq = new Req({
     ...request.body,
@@ -93,6 +90,7 @@ exports.deleteSingleReq = (request, response) => {
   });
 };
 
+// todo: remove this route
 exports.deleteAllReqs = (request, response) => {
   Req.deleteMany({}, function(error) {
     if (error) {
@@ -121,4 +119,18 @@ exports.patchReq = (request, response) => {
         response.status(200).send(JSON.stringify({ data: req, error: null }));
       }
     });
+};
+
+const getSchoolFromRequest = request => {
+  if (!request.user || !request.user.school) throw new Error();
+  return request.user.school;
+};
+
+const getUserRoleFromRequest = request => {
+  if (!request.user || !request.user.role) throw new Error();
+  return request.user.role; // "Teacher" or "Technician"
+};
+
+const isAdmin = user => {
+  return user.isAdmin;
 };

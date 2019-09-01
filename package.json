@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon --signal SIGHUP ./bin/www",
-    "start": "node ./bin/www",
+    "start": "node ./bin/www > ./app.log 2>&1",
     "all": "concurrently \"npm run dev\" \"cd client && npm run start\" ",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
