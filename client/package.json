@@ -19,7 +19,7 @@
     "lodash.omit": "^4.5.0",
     "lodash.pickby": "^4.6.0",
     "lodash.remove": "^4.7.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "node-env-run": "^3.0.2",
     "normalizr": "^3.3.0",
     "react": "^16.8.6",
